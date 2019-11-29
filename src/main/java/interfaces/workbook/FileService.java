@@ -39,86 +39,74 @@ public class FileService implements DataService {
     }
 
     @Override
-    public List<PingMianXianXing> getPingMianXianXingData(VBox node) {
+    public List<PingMianXianXing> getPingMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         List<PingMianXianXing> pingMianXianXings = new ArrayList<>();
-        try {
-            setUpPingMianXianXingData(node, pingMianXianXings);
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
+        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        for (Row row : workbook.getSheetAt(0)) {
+            if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
+                break;
+            }
+            if (row.getRowNum() != 0) {
+                pingMianXianXings.add(buildPingMianXianXing(row));
+            }
         }
+        workbook.close();
         return pingMianXianXings;
     }
 
-    private void setUpPingMianXianXingData(VBox node, List<PingMianXianXing> pingMianXianXings) throws IOException, InvalidFormatException {
+    private PingMianXianXing buildPingMianXianXing(Row row) {
+        return PingMianXianXing.builder()
+                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
+                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
+                .radius(Double.valueOf(dataFormatter.formatCellValue(row.getCell(2))))
+                .build();
+    }
+
+    @Override
+    public List<ZongMianXianXing> getZongMianXianXingData(VBox node) throws IOException, InvalidFormatException {
+        List<ZongMianXianXing> zongMianXianXings = new ArrayList<>();
         Workbook workbook = WorkbookFactory.create(this.openFolder(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
             }
             if (row.getRowNum() != 0) {
-                pingMianXianXings.add(PingMianXianXing.builder()
-                        .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
-                        .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
-                        .radius(Double.valueOf(dataFormatter.formatCellValue(row.getCell(2))))
-                        .build());
+                zongMianXianXings.add(buildZongMianXianXing(row));
             }
         }
         workbook.close();
-    }
-
-    @Override
-    public List<ZongMianXianXing> getZongMianXianXingData(VBox node) {
-        List<ZongMianXianXing> zongMianXianXings = new ArrayList<>();
-        try {
-            setUpZongMianXianXingData(node, zongMianXianXings);
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
-        }
         return zongMianXianXings;
     }
 
-    private void setUpZongMianXianXingData(VBox node, List<ZongMianXianXing> zongMianXianXings) throws IOException, InvalidFormatException {
-        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
-        for (Row row : workbook.getSheetAt(0)) {
-            if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
-                break;
-            }
-            if (row.getRowNum() != 0) {
-                zongMianXianXings.add(ZongMianXianXing.builder()
-                        .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
-                        .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
-                        .slope(Double.valueOf(dataFormatter.formatCellValue(row.getCell(2))))
-                        .build());
-            }
-        }
-        workbook.close();
+    private ZongMianXianXing buildZongMianXianXing(Row row) {
+        return ZongMianXianXing.builder()
+                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
+                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
+                .slope(Double.valueOf(dataFormatter.formatCellValue(row.getCell(2))))
+                .build();
     }
 
     @Override
-    public List<GouZhaoWu> getGouZhaoWuData(VBox node) {
+    public List<GouZhaoWu> getGouZhaoWuData(VBox node) throws IOException, InvalidFormatException {
         List<GouZhaoWu> gouZhaoWus = new ArrayList<>();
-        try {
-            setUpGouZhaoWuData(node, gouZhaoWus);
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
-        }
-        return gouZhaoWus;
-    }
-
-    private void setUpGouZhaoWuData(VBox node, List<GouZhaoWu> gouZhaoWus) throws IOException, InvalidFormatException {
         Workbook workbook = WorkbookFactory.create(this.openFolder(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
             }
             if (row.getRowNum() != 0) {
-                gouZhaoWus.add(GouZhaoWu.builder()
-                        .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
-                        .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
-                        .roadStructure(dataFormatter.formatCellValue(row.getCell(2)))
-                        .build());
+                gouZhaoWus.add(buildGouZhaoWu(row));
             }
         }
         workbook.close();
+        return gouZhaoWus;
+    }
+
+    private GouZhaoWu buildGouZhaoWu(Row row) {
+        return GouZhaoWu.builder()
+                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
+                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
+                .roadStructure(dataFormatter.formatCellValue(row.getCell(2)))
+                .build();
     }
 }

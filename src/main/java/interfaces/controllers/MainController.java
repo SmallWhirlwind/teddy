@@ -4,6 +4,9 @@ import domain.DataHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import java.io.IOException;
 
 public class MainController {
 
@@ -17,17 +20,17 @@ public class MainController {
     }
 
     @FXML
-    protected void setUpPingMianXianXingData(ActionEvent event) {
+    protected void setUpPingMianXianXingData(ActionEvent event) throws IOException, InvalidFormatException {
         dataHandler.setUpPingMianXianXingData(node);
     }
 
     @FXML
-    protected void setUpZongMianXianXingData(ActionEvent event) {
+    protected void setUpZongMianXianXingData(ActionEvent event) throws IOException, InvalidFormatException {
         dataHandler.setUpZongMianXianXingData(node);
     }
 
     @FXML
-    protected void setUpGouZhaoWeData(ActionEvent event) {
+    protected void setUpGouZhaoWeData(ActionEvent event) throws IOException, InvalidFormatException {
         dataHandler.setUpGouZhaoWuData(node);
     }
 }

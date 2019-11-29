@@ -6,7 +6,9 @@ import domain.model.ZongMianXianXing;
 import interfaces.workbook.FileService;
 import javafx.scene.layout.VBox;
 import lombok.Data;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
+import java.io.IOException;
 import java.util.List;
 
 @Data
@@ -24,15 +26,15 @@ public class DataHandler {
         dataService = new FileService();
     }
 
-    public void setUpPingMianXianXingData(VBox node) {
+    public void setUpPingMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         pingMianXianXings = dataService.getPingMianXianXingData(node);
     }
 
-    public void setUpZongMianXianXingData(VBox node) {
+    public void setUpZongMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         zongMianXianXings = dataService.getZongMianXianXingData(node);
     }
 
-    public void setUpGouZhaoWuData(VBox node) {
+    public void setUpGouZhaoWuData(VBox node) throws IOException, InvalidFormatException {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
     }
 }
