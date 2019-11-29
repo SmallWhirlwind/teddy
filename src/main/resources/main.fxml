@@ -22,8 +22,9 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" onAction="#handleButtonAction"/>
-            <MenuItem mnemonicParsing="false" text="Open…" />
+            <MenuItem mnemonicParsing="false" text="平面线形文件" onAction="#setUpPingMianXianXingData"/>
+            <MenuItem mnemonicParsing="false" text="纵面线形文件" onAction="#setUpZongMianXianXingData"/>
+            <MenuItem mnemonicParsing="false" text="构造物类型文件" onAction="#setUpGouZhaoWeData"/>
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Close" />
