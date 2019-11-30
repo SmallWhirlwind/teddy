@@ -7,3 +7,11 @@ This is a road analysis software
 * java8
 * gradle
 * javafx 
+
+## Build Executable Package
+### Mac
+* ./gradlew jfxNative
+### Windows
+* gradlew jfxNative
+### Where
+* build/jfx/native
