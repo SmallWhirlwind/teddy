@@ -54,6 +54,7 @@ public class DataHandler {
             aggDataList.add(AggData.builder()
                     .start(totalStakes.get(i - 1))
                     .end(totalStakes.get(i))
+                    .length(totalStakes.get(i) - totalStakes.get(i - 1))
                     .radius(getMatchedRadius(totalStakes.get(i - 1), totalStakes.get(i)))
                     .slope(getMatchedSlope(totalStakes.get(i - 1), totalStakes.get(i)))
                     .build());

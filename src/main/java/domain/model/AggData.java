@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AggData {
     private Double start;
     private Double end;
+    private Double length;
     private Double radius;
     private Double slope;
 }

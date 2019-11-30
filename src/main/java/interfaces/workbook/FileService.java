@@ -122,9 +122,11 @@ public class FileService implements DataService {
         XSSFCell cell1 = row.createCell(1);
         cell1.setCellValue("终点桩号");
         XSSFCell cell2 = row.createCell(2);
-        cell2.setCellValue("半径");
+        cell2.setCellValue("长度");
         XSSFCell cell3 = row.createCell(3);
-        cell3.setCellValue("纵坡");
+        cell3.setCellValue("半径");
+        XSSFCell cell4 = row.createCell(4);
+        cell4.setCellValue("纵坡");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
@@ -140,11 +142,15 @@ public class FileService implements DataService {
 
             XSSFCell cell_2 = xssfRow.createCell(2);
             cell_2.setCellStyle(cellStyle);
-            cell_2.setCellValue(aggData.getRadius());
+            cell_2.setCellValue(aggData.getLength());
 
             XSSFCell cell_3 = xssfRow.createCell(3);
             cell_3.setCellStyle(cellStyle);
-            cell_3.setCellValue(aggData.getSlope());
+            cell_3.setCellValue(aggData.getRadius());
+
+            XSSFCell cell_4 = xssfRow.createCell(4);
+            cell_4.setCellStyle(cellStyle);
+            cell_4.setCellValue(aggData.getSlope());
 
         }
 
