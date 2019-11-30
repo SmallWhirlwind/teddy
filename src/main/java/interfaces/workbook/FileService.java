@@ -148,7 +148,7 @@ public class FileService implements DataService {
 
         }
 
-        OutputStream out = new FileOutputStream("agg_data.xlsx");
+        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
         workbook.write(out);
         out.close();
         workbook.close();
