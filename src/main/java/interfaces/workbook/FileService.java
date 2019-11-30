@@ -12,10 +12,7 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -114,6 +111,11 @@ public class FileService implements DataService {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet spreadsheet = workbook.createSheet();
 
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        // 时间类型格式，如果不设置这个，excel默认展示位number型
+        XSSFDataFormat format = workbook.createDataFormat();
+        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+
         XSSFRow row = spreadsheet.createRow(0);
         XSSFCell cell0 = row.createCell(0);
         cell0.setCellValue("起点桩号");
@@ -125,20 +127,24 @@ public class FileService implements DataService {
         cell3.setCellValue("纵坡");
 
         int rowNum = 1;
-        for(AggData aggData: aggDataList) {
+        for (AggData aggData : aggDataList) {
             XSSFRow xssfRow = spreadsheet.createRow(rowNum++);
 
-            xssfRow.createCell(0)
-                    .setCellValue(aggData.getStart());
+            XSSFCell cell_0 = xssfRow.createCell(0);
+            cell_0.setCellValue(aggData.getStart());
+            cell_0.setCellStyle(cellStyle);
 
-            xssfRow.createCell(1)
-                    .setCellValue(aggData.getEnd());
+            XSSFCell cell_1 = xssfRow.createCell(1);
+            cell_1.setCellStyle(cellStyle);
+            cell_1.setCellValue(aggData.getEnd());
 
-            xssfRow.createCell(2)
-                    .setCellValue(aggData.getRadius());
+            XSSFCell cell_2 = xssfRow.createCell(2);
+            cell_2.setCellStyle(cellStyle);
+            cell_2.setCellValue(aggData.getRadius());
 
-            xssfRow.createCell(3)
-                    .setCellValue(aggData.getSlope());
+            XSSFCell cell_3 = xssfRow.createCell(3);
+            cell_3.setCellStyle(cellStyle);
+            cell_3.setCellValue(aggData.getSlope());
 
         }
 
