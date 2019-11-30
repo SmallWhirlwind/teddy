@@ -3,6 +3,7 @@ package interfaces.controllers;
 import domain.DataHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -27,20 +28,39 @@ public class MainController {
     }
 
     @FXML
-    protected void setUpPingMianXianXingData(ActionEvent event) throws IOException, InvalidFormatException {
-        dataHandler.setUpPingMianXianXingData(node);
-        p_status.setSelected(true);
+    protected void setUpPingMianXianXingData(ActionEvent event) {
+        try {
+            dataHandler.setUpPingMianXianXingData(node);
+            p_status.setSelected(true);
+        } catch (IOException | InvalidFormatException e) {
+            popAlert(e.getMessage());
+        }
     }
 
     @FXML
-    protected void setUpZongMianXianXingData(ActionEvent event) throws IOException, InvalidFormatException {
-        dataHandler.setUpZongMianXianXingData(node);
-        z_status.setSelected(true);
+    protected void setUpZongMianXianXingData(ActionEvent event) {
+        try {
+            dataHandler.setUpZongMianXianXingData(node);
+            z_status.setSelected(true);
+        } catch (IOException | InvalidFormatException e) {
+            popAlert(e.getMessage());
+        }
     }
 
     @FXML
-    protected void setUpGouZhaoWeData(ActionEvent event) throws IOException, InvalidFormatException {
-        dataHandler.setUpGouZhaoWuData(node);
-        g_status.setSelected(true);
+    protected void setUpGouZhaoWeData(ActionEvent event) {
+        try {
+            dataHandler.setUpGouZhaoWuData(node);
+            g_status.setSelected(true);
+        } catch (IOException | InvalidFormatException e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    private void popAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.titleProperty().set("ERROR");
+        alert.headerTextProperty().set(message);
+        alert.showAndWait();
     }
 }
