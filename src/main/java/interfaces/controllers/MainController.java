@@ -1,7 +1,6 @@
 package interfaces.controllers;
 
 import domain.DataHandler;
-import domain.model.AggData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,7 +9,6 @@ import javafx.scene.layout.VBox;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.IOException;
-import java.util.List;
 
 public class MainController {
 
@@ -63,8 +61,12 @@ public class MainController {
 
     @FXML
     protected void aggregatingData(ActionEvent event) {
-        List<AggData> aggregatingData = dataHandler.getAggregatingData();
-        agg_status.setSelected(true);
+        try {
+            dataHandler.exportAggregatingData();
+            agg_status.setSelected(true);
+        } catch (IOException e) {
+            popAlert(e.getMessage());
+        }
     }
 
     private void popAlert(String message) {

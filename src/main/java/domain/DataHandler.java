@@ -42,7 +42,12 @@ public class DataHandler {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
     }
 
-    public List<AggData> getAggregatingData() {
+    public void exportAggregatingData() throws IOException {
+        List<AggData> aggDataList = getAggData();
+        dataService.exportAggData(aggDataList);
+    }
+
+    private List<AggData> getAggData() {
         List<AggData> aggDataList = new ArrayList<>();
         List<Double> totalStakes = getTotalStakes();
         for (int i = 1; i < totalStakes.size(); i++) {
