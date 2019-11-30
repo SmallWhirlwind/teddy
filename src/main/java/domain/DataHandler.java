@@ -87,6 +87,6 @@ public class DataHandler {
 
         Stream<Double> startStream = Stream.concat(startP.stream(), startZ.stream()).distinct();
         Stream<Double> endStream = Stream.concat(endP.stream(), endZ.stream()).distinct();
-        return Stream.concat(startStream, endStream).distinct().collect(Collectors.toList());
+        return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
     }
 }
