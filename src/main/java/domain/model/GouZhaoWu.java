@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class GouZhaoWu {
     private Double start;
     private Double end;
-    private String roadStructure;
+    private GouZhaoWuType roadStructure;
 }

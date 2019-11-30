@@ -1,9 +1,6 @@
 package domain;
 
-import domain.model.AggData;
-import domain.model.GouZhaoWu;
-import domain.model.PingMianXianXing;
-import domain.model.ZongMianXianXing;
+import domain.model.*;
 import interfaces.workbook.FileService;
 import javafx.scene.layout.VBox;
 import lombok.Data;
@@ -11,7 +8,9 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,9 +56,45 @@ public class DataHandler {
                     .length(totalStakes.get(i) - totalStakes.get(i - 1))
                     .radius(getMatchedRadius(totalStakes.get(i - 1), totalStakes.get(i)))
                     .slope(getMatchedSlope(totalStakes.get(i - 1), totalStakes.get(i)))
+                    .roadStructure(getMatchedRoadStructure(totalStakes.get(i - 1), totalStakes.get(i)))
                     .build());
         }
         return aggDataList;
+    }
+
+    private String getMatchedRoadStructure(Double start, Double end) {
+        List<GouZhaoWuType> results = new ArrayList<>();
+        for (GouZhaoWu gouZhaoWu : gouZhaoWus) {
+            if (gouZhaoWu.getStart() <= start && gouZhaoWu.getEnd() >= start) {
+                results.add(gouZhaoWu.getRoadStructure());
+            }
+            if (gouZhaoWu.getStart() >= start && gouZhaoWu.getEnd() <= end) {
+                results.add(gouZhaoWu.getRoadStructure());
+            }
+            if (gouZhaoWu.getStart() <= end && gouZhaoWu.getEnd() >= end) {
+                results.add(gouZhaoWu.getRoadStructure());
+            }
+        }
+        return combineGouZhaoWuResult(results);
+    }
+
+    private String combineGouZhaoWuResult(List<GouZhaoWuType> results) {
+        if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.LU)&&results.contains(GouZhaoWuType.SUI)) {
+            return GouZhaoWuType.QIAO_SUI.getValue();
+        } else if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.SUI)) {
+            return GouZhaoWuType.QIAO_SUI.getValue();
+        } else if (results.contains(GouZhaoWuType.LU)&&results.contains(GouZhaoWuType.SUI)) {
+            return GouZhaoWuType.LU_SUI.getValue();
+        } else if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.LU)) {
+            return GouZhaoWuType.LU_QIAO.getValue();
+        } else if (results.contains(GouZhaoWuType.QIAO)) {
+            return GouZhaoWuType.QIAO.getValue();
+        } else if (results.contains(GouZhaoWuType.LU)) {
+            return GouZhaoWuType.LU.getValue();
+        } else if (results.contains(GouZhaoWuType.SUI)) {
+            return GouZhaoWuType.SUI.getValue();
+        }
+        return results.toString();
     }
 
     private Double getMatchedRadius(Double start, Double end) {

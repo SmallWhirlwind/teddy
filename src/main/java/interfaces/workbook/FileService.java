@@ -1,10 +1,7 @@
 package interfaces.workbook;
 
 import domain.DataService;
-import domain.model.AggData;
-import domain.model.GouZhaoWu;
-import domain.model.PingMianXianXing;
-import domain.model.ZongMianXianXing;
+import domain.model.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -127,6 +124,8 @@ public class FileService implements DataService {
         cell3.setCellValue("半径");
         XSSFCell cell4 = row.createCell(4);
         cell4.setCellValue("纵坡");
+        XSSFCell cell5 = row.createCell(5);
+        cell5.setCellValue("构造物类型");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
@@ -152,6 +151,9 @@ public class FileService implements DataService {
             cell_4.setCellStyle(cellStyle);
             cell_4.setCellValue(aggData.getSlope());
 
+            XSSFCell cell_5 = xssfRow.createCell(5);
+            cell_5.setCellValue(aggData.getRoadStructure());
+
         }
 
         OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
@@ -164,7 +166,7 @@ public class FileService implements DataService {
         return GouZhaoWu.builder()
                 .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
                 .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
-                .roadStructure(dataFormatter.formatCellValue(row.getCell(2)))
+                .roadStructure(GouZhaoWuType.getType(dataFormatter.formatCellValue(row.getCell(2))))
                 .build();
     }
 }
