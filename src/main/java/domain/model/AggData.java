@@ -15,5 +15,5 @@ public class AggData {
     private Double length;
     private Double radius;
     private Double slope;
-    private String roadStructure;
+    private GouZhaoWuType roadStructure;
 }

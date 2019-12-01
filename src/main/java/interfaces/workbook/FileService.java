@@ -152,7 +152,7 @@ public class FileService implements DataService {
             cell_4.setCellValue(aggData.getSlope());
 
             XSSFCell cell_5 = xssfRow.createCell(5);
-            cell_5.setCellValue(aggData.getRoadStructure());
+            cell_5.setCellValue(aggData.getRoadStructure().getValue());
 
         }
 

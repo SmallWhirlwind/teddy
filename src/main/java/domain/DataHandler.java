@@ -41,12 +41,12 @@ public class DataHandler {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
     }
 
-    public void exportAggregatingData() throws IOException {
+    public void exportAggregatingData() throws Exception {
         aggDataList = getAggData();
         dataService.exportAggData(aggDataList);
     }
 
-    private List<AggData> getAggData() {
+    private List<AggData> getAggData() throws Exception {
         aggDataList = new ArrayList<>();
         List<Double> totalStakes = getTotalStakes();
         buildAggData(totalStakes);
@@ -66,7 +66,7 @@ public class DataHandler {
         return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
     }
 
-    private void buildAggData(List<Double> totalStakes) {
+    private void buildAggData(List<Double> totalStakes) throws Exception {
         for (int i = 1; i < totalStakes.size(); i++) {
             aggDataList.add(AggData.builder()
                     .start(totalStakes.get(i - 1))
@@ -79,7 +79,7 @@ public class DataHandler {
         }
     }
 
-    private String getMatchedRoadStructure(Double start, Double end) {
+    private GouZhaoWuType getMatchedRoadStructure(Double start, Double end) throws Exception {
         List<GouZhaoWuType> results = new ArrayList<>();
         for (GouZhaoWu gouZhaoWu : gouZhaoWus) {
             if (gouZhaoWu.getStart() <= start && gouZhaoWu.getEnd() >= start) {
@@ -95,23 +95,23 @@ public class DataHandler {
         return combineGouZhaoWuResult(results);
     }
 
-    private String combineGouZhaoWuResult(List<GouZhaoWuType> results) {
+    private GouZhaoWuType combineGouZhaoWuResult(List<GouZhaoWuType> results) throws Exception {
         if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.LU) && results.contains(GouZhaoWuType.SUI)) {
-            return GouZhaoWuType.QIAO_SUI.getValue();
+            return GouZhaoWuType.QIAO_SUI;
         } else if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.SUI)) {
-            return GouZhaoWuType.QIAO_SUI.getValue();
+            return GouZhaoWuType.QIAO_SUI;
         } else if (results.contains(GouZhaoWuType.LU) && results.contains(GouZhaoWuType.SUI)) {
-            return GouZhaoWuType.LU_SUI.getValue();
+            return GouZhaoWuType.LU_SUI;
         } else if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.LU)) {
-            return GouZhaoWuType.LU_QIAO.getValue();
+            return GouZhaoWuType.LU_QIAO;
         } else if (results.contains(GouZhaoWuType.QIAO)) {
-            return GouZhaoWuType.QIAO.getValue();
+            return GouZhaoWuType.QIAO;
         } else if (results.contains(GouZhaoWuType.LU)) {
-            return GouZhaoWuType.LU.getValue();
+            return GouZhaoWuType.LU;
         } else if (results.contains(GouZhaoWuType.SUI)) {
-            return GouZhaoWuType.SUI.getValue();
+            return GouZhaoWuType.SUI;
         }
-        return results.toString();
+        throw new Exception(GouZhaoWuType.ERROR.getValue());
     }
 
     private Double getMatchedRadius(Double start, Double end) {
@@ -142,8 +142,42 @@ public class DataHandler {
     }
 
     private void extensionTunnelStakes() {
-        for (AggData aggData : aggDataList) {
+        Double startStake = aggDataList.get(0).getStart();
+        Double endStake = aggDataList.get(aggDataList.size() - 1).getEnd();
+        for (int i = 0; i < aggDataList.size(); i++) {
+            AggData currentAggData = aggDataList.get(i);
+            if (currentAggData.getRoadStructure() == GouZhaoWuType.SUI) {
+                currentAggData.setStart(getStart(startStake, currentAggData));
+                currentAggData.setEnd(getEnd(endStake, currentAggData));
 
+                for (int j = i - 1; j >= 0; j--) {
+                    if (aggDataList.get(j).getStart() < currentAggData.getStart()) {
+                        aggDataList.get(j).setEnd(aggDataList.get(j).getEnd() - 200);
+                        return;
+                    } else {
+                        aggDataList.remove(j);
+                        j++;
+                    }
+                }
+
+                for (int k = i + 1; k < aggDataList.size(); k++) {
+                    if (aggDataList.get(k).getEnd() > currentAggData.getEnd()) {
+                        aggDataList.get(k).setStart(aggDataList.get(k).getStart() + 100);
+                        return;
+                    } else {
+                        aggDataList.remove(k);
+                        k--;
+                    }
+                }
+            }
         }
+    }
+
+    private double getEnd(Double endStake, AggData currentAggData) {
+        return currentAggData.getEnd() + 100 > endStake ? endStake : currentAggData.getEnd() + 100;
+    }
+
+    private double getStart(Double startStake, AggData currentAggData) {
+        return currentAggData.getStart() - 200 < startStake ? startStake : currentAggData.getStart() - 200;
     }
 }

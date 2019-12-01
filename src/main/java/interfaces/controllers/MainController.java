@@ -64,7 +64,7 @@ public class MainController {
         try {
             dataHandler.exportAggregatingData();
             agg_status.setSelected(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             popAlert(e.getMessage());
         }
     }
