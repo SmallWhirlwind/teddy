@@ -8,9 +8,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +22,8 @@ public class DataHandler {
     private List<ZongMianXianXing> zongMianXianXings;
 
     private List<GouZhaoWu> gouZhaoWus;
+
+    private List<AggData> aggDataList;
 
     public DataHandler() {
         dataService = new FileService();
@@ -42,12 +42,12 @@ public class DataHandler {
     }
 
     public void exportAggregatingData() throws IOException {
-        List<AggData> aggDataList = getAggData();
+        aggDataList = getAggData();
         dataService.exportAggData(aggDataList);
     }
 
     private List<AggData> getAggData() {
-        List<AggData> aggDataList = new ArrayList<>();
+        aggDataList = new ArrayList<>();
         List<Double> totalStakes = getTotalStakes();
         for (int i = 1; i < totalStakes.size(); i++) {
             aggDataList.add(AggData.builder()
