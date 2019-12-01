@@ -18,4 +18,5 @@ public class AggData {
     private GouZhaoWuType roadStructure;
     @Builder.Default
     private Boolean huTongLiJiao = false;
+    private RoadType roadType;
 }

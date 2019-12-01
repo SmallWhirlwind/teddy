@@ -159,6 +159,8 @@ public class FileService implements DataService {
         cell5.setCellValue("构造物类型");
         XSSFCell cell6 = row.createCell(6);
         cell6.setCellValue("构造物类型");
+        XSSFCell cell7 = row.createCell(7);
+        cell7.setCellValue("构造物类型");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
@@ -190,6 +192,8 @@ public class FileService implements DataService {
             XSSFCell cell_6 = xssfRow.createCell(6);
             cell_6.setCellValue(aggData.getHuTongLiJiao().toString());
 
+            XSSFCell cell_7 = xssfRow.createCell(7);
+            cell_7.setCellValue(aggData.getRoadType().getValue());
         }
 
         OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");

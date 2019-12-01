@@ -61,6 +61,7 @@ public class DataHandler {
         mergeSections();
         extensionTunnelStakes();
         addHuTongLiJiaoData();
+        analysisData();
         return aggDataList;
     }
 
@@ -208,5 +209,34 @@ public class DataHandler {
                 }
             }
         }
+    }
+
+    private void analysisData() {
+        aggDataList.forEach(item -> {
+            if (item.getHuTongLiJiao()) {
+                item.setRoadType(RoadType.HU_TONG_LI_JIAO_LU_DUAN);
+            } else if (item.getRoadStructure() == GouZhaoWuType.SUI ||
+                    item.getRoadStructure() == GouZhaoWuType.QIAO_SUI ||
+                    item.getRoadStructure() == GouZhaoWuType.LU_SUI) {
+                item.setRoadType(RoadType.SUI_DAO_LU_DUAN);
+            } else if (item.getRadius() > 1000 &&
+                    item.getSlope() < 3 &&
+                    item.getLength() > 200) {
+                item.setRoadType(RoadType.PING_ZHI_LU_DUAN);
+            } else if (item.getRadius() > 1000 &&
+                    item.getSlope() < 3 &&
+                    item.getLength() < 200) {
+                item.setRoadType(RoadType.DUAN_PING_ZHI_LU_DUAN);
+            } else if (item.getRadius() > 1000 &&
+                    item.getSlope() >= 3) {
+                item.setRoadType(RoadType.ZONG_PU_LU_DUAN);
+            } else if (item.getRadius() <= 1000 &&
+                    item.getSlope() < 3) {
+                item.setRoadType(RoadType.PING_QU_LU_DUAN);
+            } else if (item.getRadius() <= 1000 &&
+                    item.getSlope() >= 3) {
+                item.setRoadType(RoadType.WAN_PU_LU_DUAN);
+            }
+        });
     }
 }
