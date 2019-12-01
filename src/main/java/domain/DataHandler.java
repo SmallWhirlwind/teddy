@@ -37,7 +37,7 @@ public class DataHandler {
         zongMianXianXings = dataService.getZongMianXianXingData(node);
     }
 
-    public void setUpGouZhaoWuData(VBox node) throws IOException, InvalidFormatException {
+    public void setUpGouZhaoWuData(VBox node) throws Exception {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
     }
 

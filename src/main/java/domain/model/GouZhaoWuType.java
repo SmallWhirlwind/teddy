@@ -19,7 +19,7 @@ public enum GouZhaoWuType {
         return this.value;
     }
 
-    public static GouZhaoWuType getType(String name) {
+    public static GouZhaoWuType getType(String name) throws Exception {
         if (name.equals("路基路段")) {
             return GouZhaoWuType.LU;
         }
@@ -29,6 +29,6 @@ public enum GouZhaoWuType {
         if (name.equals("隧道路段")) {
             return GouZhaoWuType.SUI;
         }
-        return GouZhaoWuType.ERROR;
+        throw new Exception(GouZhaoWuType.ERROR.value);
     }
 }

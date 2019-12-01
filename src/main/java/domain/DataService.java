@@ -15,7 +15,7 @@ public interface DataService {
 
     List<ZongMianXianXing> getZongMianXianXingData(VBox node) throws IOException, InvalidFormatException;
 
-    List<GouZhaoWu> getGouZhaoWuData(VBox node) throws IOException, InvalidFormatException;
+    List<GouZhaoWu> getGouZhaoWuData(VBox node) throws Exception;
 
     void exportAggData(List<AggData> aggDataList) throws IOException;
 }

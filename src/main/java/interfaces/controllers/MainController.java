@@ -54,7 +54,7 @@ public class MainController {
         try {
             dataHandler.setUpGouZhaoWuData(node);
             g_status.setSelected(true);
-        } catch (IOException | InvalidFormatException e) {
+        } catch (Throwable e) {
             popAlert(e.getMessage());
         }
     }

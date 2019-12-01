@@ -88,7 +88,7 @@ public class FileService implements DataService {
     }
 
     @Override
-    public List<GouZhaoWu> getGouZhaoWuData(VBox node) throws IOException, InvalidFormatException {
+    public List<GouZhaoWu> getGouZhaoWuData(VBox node) throws Exception {
         List<GouZhaoWu> gouZhaoWus = new ArrayList<>();
         Workbook workbook = WorkbookFactory.create(this.openFolder(node));
         for (Row row : workbook.getSheetAt(0)) {
@@ -162,7 +162,7 @@ public class FileService implements DataService {
         workbook.close();
     }
 
-    private GouZhaoWu buildGouZhaoWu(Row row) {
+    private GouZhaoWu buildGouZhaoWu(Row row) throws Exception {
         return GouZhaoWu.builder()
                 .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
                 .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
