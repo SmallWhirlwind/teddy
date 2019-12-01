@@ -12,6 +12,7 @@
             <MenuItem mnemonicParsing="false" onAction="#setUpPingMianXianXingData" text="平面线形文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpZongMianXianXingData" text="纵面线形文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpGouZhaoWeData" text="构造物类型文件" />
+            <MenuItem mnemonicParsing="false" onAction="#setUpHuTongLiJiaoData" text="互通立交文件" />
             <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="聚合平纵线形数据" />
           </items>
         </Menu>
@@ -22,7 +23,8 @@
         <CheckBox fx:id="p_status" layoutX="11.0" layoutY="9.0" mnemonicParsing="false" text="平面线形文件" />
         <CheckBox fx:id="z_status" layoutX="11.0" layoutY="32.0" mnemonicParsing="false" text="纵面线形文件" />
         <CheckBox fx:id="g_status" layoutX="11.0" layoutY="55.0" mnemonicParsing="false" text="构造物类型文件" />
-        <CheckBox fx:id="agg_status" layoutX="11.0" layoutY="78.0" mnemonicParsing="false" text="聚合平纵线形数据" />
+        <CheckBox fx:id="h_status" layoutX="11.0" layoutY="78.0" mnemonicParsing="false" text="互通立交文件" />
+        <CheckBox fx:id="agg_status" layoutX="11.0" layoutY="101.0" mnemonicParsing="false" text="聚合平纵线形数据" />
       </children>
     </AnchorPane>
   </children>

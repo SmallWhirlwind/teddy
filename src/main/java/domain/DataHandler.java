@@ -25,6 +25,8 @@ public class DataHandler {
 
     private List<GouZhaoWu> gouZhaoWus;
 
+    private List<HuTongLiJiao> huTongLiJiaos;
+
     private List<AggData> aggDataList;
 
     public DataHandler() {
@@ -43,6 +45,10 @@ public class DataHandler {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
     }
 
+    public void setUpHuTongLiJiaoData(VBox node) throws Exception {
+        huTongLiJiaos = dataService.getHuTongLiJiaoData(node);
+    }
+
     public void exportAggregatingData() throws Exception {
         aggDataList = getAggData();
         dataService.exportAggData(aggDataList);
@@ -54,6 +60,7 @@ public class DataHandler {
         buildAggData(totalStakes);
         mergeSections();
         extensionTunnelStakes();
+        addHuTongLiJiaoData();
         return aggDataList;
     }
 
@@ -185,5 +192,21 @@ public class DataHandler {
 
     private double getStart(Double startStake, AggData currentAggData) {
         return currentAggData.getStart() - XiangQian < startStake ? startStake : currentAggData.getStart() - XiangQian;
+    }
+
+    private void addHuTongLiJiaoData() {
+        for (HuTongLiJiao huTongLiJiao : huTongLiJiaos) {
+            for (AggData aggData : aggDataList) {
+                if (aggData.getEnd() > huTongLiJiao.getStart() && aggData.getEnd() < huTongLiJiao.getEnd()) {
+                    aggData.setHuTongLiJiao(true);
+                }
+                if (aggData.getStart() > huTongLiJiao.getStart() && aggData.getStart() < huTongLiJiao.getEnd()) {
+                    aggData.setHuTongLiJiao(true);
+                }
+                if (aggData.getStart() < huTongLiJiao.getStart() && aggData.getEnd() > huTongLiJiao.getEnd()) {
+                    aggData.setHuTongLiJiao(true);
+                }
+            }
+        }
     }
 }

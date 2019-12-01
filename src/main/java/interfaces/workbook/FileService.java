@@ -103,6 +103,37 @@ public class FileService implements DataService {
         return gouZhaoWus;
     }
 
+    private GouZhaoWu buildGouZhaoWu(Row row) throws Exception {
+        return GouZhaoWu.builder()
+                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
+                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
+                .roadStructure(GouZhaoWuType.getType(dataFormatter.formatCellValue(row.getCell(2))))
+                .build();
+    }
+
+    @Override
+    public List<HuTongLiJiao> getHuTongLiJiaoData(VBox node) throws Exception {
+        List<HuTongLiJiao> huTongLiJiaos = new ArrayList<>();
+        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        for (Row row : workbook.getSheetAt(0)) {
+            if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
+                break;
+            }
+            if (row.getRowNum() != 0) {
+                huTongLiJiaos.add(buildHuTongLiJiao(row));
+            }
+        }
+        workbook.close();
+        return huTongLiJiaos;
+    }
+
+    private HuTongLiJiao buildHuTongLiJiao(Row row) throws Exception {
+        return HuTongLiJiao.builder()
+                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
+                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
+                .build();
+    }
+
     @Override
     public void exportAggData(List<AggData> aggDataList) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -126,6 +157,8 @@ public class FileService implements DataService {
         cell4.setCellValue("纵坡");
         XSSFCell cell5 = row.createCell(5);
         cell5.setCellValue("构造物类型");
+        XSSFCell cell6 = row.createCell(6);
+        cell6.setCellValue("构造物类型");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
@@ -154,19 +187,14 @@ public class FileService implements DataService {
             XSSFCell cell_5 = xssfRow.createCell(5);
             cell_5.setCellValue(aggData.getRoadStructure().getValue());
 
+            XSSFCell cell_6 = xssfRow.createCell(6);
+            cell_6.setCellValue(aggData.getHuTongLiJiao().toString());
+
         }
 
         OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
         workbook.write(out);
         out.close();
         workbook.close();
-    }
-
-    private GouZhaoWu buildGouZhaoWu(Row row) throws Exception {
-        return GouZhaoWu.builder()
-                .start(Double.valueOf(dataFormatter.formatCellValue(row.getCell(0))))
-                .end(Double.valueOf(dataFormatter.formatCellValue(row.getCell(1))))
-                .roadStructure(GouZhaoWuType.getType(dataFormatter.formatCellValue(row.getCell(2))))
-                .build();
     }
 }

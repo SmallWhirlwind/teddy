@@ -1,9 +1,6 @@
 package domain;
 
-import domain.model.AggData;
-import domain.model.GouZhaoWu;
-import domain.model.PingMianXianXing;
-import domain.model.ZongMianXianXing;
+import domain.model.*;
 import javafx.scene.layout.VBox;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -18,4 +15,6 @@ public interface DataService {
     List<GouZhaoWu> getGouZhaoWuData(VBox node) throws Exception;
 
     void exportAggData(List<AggData> aggDataList) throws IOException;
+
+    List<HuTongLiJiao> getHuTongLiJiaoData(VBox node) throws Exception;
 }

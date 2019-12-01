@@ -9,13 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AggData {
+public class HuTongLiJiao {
     private Double start;
     private Double end;
-    private Double length;
-    private Double radius;
-    private Double slope;
-    private GouZhaoWuType roadStructure;
-    @Builder.Default
-    private Boolean huTongLiJiao = false;
 }

@@ -21,6 +21,8 @@ public class MainController {
     @FXML
     private CheckBox g_status;
     @FXML
+    private CheckBox h_status;
+    @FXML
     private CheckBox agg_status;
 
     private DataHandler dataHandler;
@@ -54,6 +56,16 @@ public class MainController {
         try {
             dataHandler.setUpGouZhaoWuData(node);
             g_status.setSelected(true);
+        } catch (Throwable e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void setUpHuTongLiJiaoData(ActionEvent event) {
+        try {
+            dataHandler.setUpHuTongLiJiaoData(node);
+            h_status.setSelected(true);
         } catch (Throwable e) {
             popAlert(e.getMessage());
         }
