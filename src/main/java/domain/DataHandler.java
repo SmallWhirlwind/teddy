@@ -49,6 +49,24 @@ public class DataHandler {
     private List<AggData> getAggData() {
         aggDataList = new ArrayList<>();
         List<Double> totalStakes = getTotalStakes();
+        buildAggData(totalStakes);
+        mergeSections();
+        extensionTunnelStakes();
+        return aggDataList;
+    }
+
+    private List<Double> getTotalStakes() {
+        List<Double> startP = pingMianXianXings.stream().map(PingMianXianXing::getStart).collect(Collectors.toList());
+        List<Double> startZ = zongMianXianXings.stream().map(ZongMianXianXing::getStart).collect(Collectors.toList());
+        List<Double> endP = pingMianXianXings.stream().map(PingMianXianXing::getEnd).collect(Collectors.toList());
+        List<Double> endZ = zongMianXianXings.stream().map(ZongMianXianXing::getEnd).collect(Collectors.toList());
+
+        Stream<Double> startStream = Stream.concat(startP.stream(), startZ.stream()).distinct();
+        Stream<Double> endStream = Stream.concat(endP.stream(), endZ.stream()).distinct();
+        return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
+    }
+
+    private void buildAggData(List<Double> totalStakes) {
         for (int i = 1; i < totalStakes.size(); i++) {
             aggDataList.add(AggData.builder()
                     .start(totalStakes.get(i - 1))
@@ -59,7 +77,6 @@ public class DataHandler {
                     .roadStructure(getMatchedRoadStructure(totalStakes.get(i - 1), totalStakes.get(i)))
                     .build());
         }
-        return aggDataList;
     }
 
     private String getMatchedRoadStructure(Double start, Double end) {
@@ -79,13 +96,13 @@ public class DataHandler {
     }
 
     private String combineGouZhaoWuResult(List<GouZhaoWuType> results) {
-        if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.LU)&&results.contains(GouZhaoWuType.SUI)) {
+        if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.LU) && results.contains(GouZhaoWuType.SUI)) {
             return GouZhaoWuType.QIAO_SUI.getValue();
-        } else if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.SUI)) {
+        } else if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.SUI)) {
             return GouZhaoWuType.QIAO_SUI.getValue();
-        } else if (results.contains(GouZhaoWuType.LU)&&results.contains(GouZhaoWuType.SUI)) {
+        } else if (results.contains(GouZhaoWuType.LU) && results.contains(GouZhaoWuType.SUI)) {
             return GouZhaoWuType.LU_SUI.getValue();
-        } else if (results.contains(GouZhaoWuType.QIAO)&&results.contains(GouZhaoWuType.LU)) {
+        } else if (results.contains(GouZhaoWuType.QIAO) && results.contains(GouZhaoWuType.LU)) {
             return GouZhaoWuType.LU_QIAO.getValue();
         } else if (results.contains(GouZhaoWuType.QIAO)) {
             return GouZhaoWuType.QIAO.getValue();
@@ -115,14 +132,18 @@ public class DataHandler {
         return 0D;
     }
 
-    private List<Double> getTotalStakes() {
-        List<Double> startP = pingMianXianXings.stream().map(PingMianXianXing::getStart).collect(Collectors.toList());
-        List<Double> startZ = zongMianXianXings.stream().map(ZongMianXianXing::getStart).collect(Collectors.toList());
-        List<Double> endP = pingMianXianXings.stream().map(PingMianXianXing::getEnd).collect(Collectors.toList());
-        List<Double> endZ = zongMianXianXings.stream().map(ZongMianXianXing::getEnd).collect(Collectors.toList());
+    private void mergeSections() {
+        aggDataList = aggDataList.stream().filter(it -> it.getLength() >= 100).collect(Collectors.toList());
+        for (int i = 1; i < aggDataList.size(); i++) {
+            if (!aggDataList.get(i).getStart().equals(aggDataList.get(i - 1).getEnd())) {
+                aggDataList.get(i).setStart(aggDataList.get(i - 1).getEnd());
+            }
+        }
+    }
 
-        Stream<Double> startStream = Stream.concat(startP.stream(), startZ.stream()).distinct();
-        Stream<Double> endStream = Stream.concat(endP.stream(), endZ.stream()).distinct();
-        return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
+    private void extensionTunnelStakes() {
+        for (AggData aggData : aggDataList) {
+
+        }
     }
 }
