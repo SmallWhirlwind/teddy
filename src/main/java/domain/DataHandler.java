@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 @Data
 public class DataHandler {
 
+    public static final Double XiangQian = 200D;
+    public static final Double XiangHou = 100D;
     private DataService dataService;
 
     private List<PingMianXianXing> pingMianXianXings;
@@ -142,6 +144,8 @@ public class DataHandler {
     }
 
     private void extensionTunnelStakes() {
+        Double qian = XiangQian;
+        Double hou = XiangHou;
         Double startStake = aggDataList.get(0).getStart();
         Double endStake = aggDataList.get(aggDataList.size() - 1).getEnd();
         for (int i = 0; i < aggDataList.size(); i++) {
@@ -152,9 +156,10 @@ public class DataHandler {
 
                 for (int j = i - 1; j >= 0; j--) {
                     if (aggDataList.get(j).getStart() < currentAggData.getStart()) {
-                        aggDataList.get(j).setEnd(aggDataList.get(j).getEnd() - 200);
+                        aggDataList.get(j).setEnd(aggDataList.get(j).getEnd() - qian);
                         return;
                     } else {
+                        qian -= aggDataList.get(j).getLength();
                         aggDataList.remove(j);
                         j++;
                     }
@@ -162,9 +167,10 @@ public class DataHandler {
 
                 for (int k = i + 1; k < aggDataList.size(); k++) {
                     if (aggDataList.get(k).getEnd() > currentAggData.getEnd()) {
-                        aggDataList.get(k).setStart(aggDataList.get(k).getStart() + 100);
+                        aggDataList.get(k).setStart(aggDataList.get(k).getStart() + hou);
                         return;
                     } else {
+                        hou -= aggDataList.get(k).getLength();
                         aggDataList.remove(k);
                         k--;
                     }
@@ -174,10 +180,10 @@ public class DataHandler {
     }
 
     private double getEnd(Double endStake, AggData currentAggData) {
-        return currentAggData.getEnd() + 100 > endStake ? endStake : currentAggData.getEnd() + 100;
+        return currentAggData.getEnd() + XiangHou > endStake ? endStake : currentAggData.getEnd() + XiangHou;
     }
 
     private double getStart(Double startStake, AggData currentAggData) {
-        return currentAggData.getStart() - 200 < startStake ? startStake : currentAggData.getStart() - 200;
+        return currentAggData.getStart() - XiangQian < startStake ? startStake : currentAggData.getStart() - XiangQian;
     }
 }
