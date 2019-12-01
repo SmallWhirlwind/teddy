@@ -158,9 +158,9 @@ public class FileService implements DataService {
         XSSFCell cell5 = row.createCell(5);
         cell5.setCellValue("构造物类型");
         XSSFCell cell6 = row.createCell(6);
-        cell6.setCellValue("构造物类型");
+        cell6.setCellValue("是否为互通立交");
         XSSFCell cell7 = row.createCell(7);
-        cell7.setCellValue("构造物类型");
+        cell7.setCellValue("路段分析");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
