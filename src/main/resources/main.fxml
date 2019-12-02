@@ -7,13 +7,30 @@
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="文件">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#setUpPingMianXianXingData" text="平面线形文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpZongMianXianXingData" text="纵面线形文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpGouZhaoWeData" text="构造物类型文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpHuTongLiJiaoData" text="互通立交文件" />
             <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="聚合平纵线形数据" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="车型">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#chooseLargeCar" text="大型车" />
+            <MenuItem mnemonicParsing="false" onAction="#chooseSmallCar" text="小型车" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="设计速度">
+          <items>
+            <MenuItem fx:id="s_120" mnemonicParsing="false" onAction="#chooseSpeed120" text="120" />
+            <MenuItem fx:id="s_100" mnemonicParsing="false" onAction="#chooseSpeed100" text="100" />
+            <MenuItem fx:id="s_80" mnemonicParsing="false" onAction="#chooseSpeed80" text="80" />
+            <MenuItem fx:id="s_75" mnemonicParsing="false" onAction="#chooseSpeed75" text="75" />
+            <MenuItem fx:id="s_65" mnemonicParsing="false" onAction="#chooseSpeed65" text="65" />
+            <MenuItem fx:id="s_60" mnemonicParsing="false" onAction="#chooseSpeed60" text="60" />
+            <MenuItem fx:id="s_50" mnemonicParsing="false" onAction="#chooseSpeed50" text="50" />
           </items>
         </Menu>
       </menus>

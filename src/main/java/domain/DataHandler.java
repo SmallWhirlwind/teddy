@@ -29,6 +29,10 @@ public class DataHandler {
 
     private List<AggData> aggDataList;
 
+    private CarType carType;
+
+    private Double startSpeed;
+
     public DataHandler() {
         dataService = new FileService();
     }
