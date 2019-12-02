@@ -19,4 +19,6 @@ public class AggData {
     @Builder.Default
     private Boolean huTongLiJiao = false;
     private RoadType roadType;
+    private Double startSpeed;
+    private Double endSpeed;
 }

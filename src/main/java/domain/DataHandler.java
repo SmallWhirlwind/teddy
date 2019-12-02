@@ -31,7 +31,15 @@ public class DataHandler {
 
     private CarType carType;
 
+    private Double designSpeed;
+
     private Double startSpeed;
+
+    private Double expectSpeed;
+
+    private Double maxAcceleration;
+
+    private Double minAcceleration;
 
     public DataHandler() {
         dataService = new FileService();
@@ -66,6 +74,7 @@ public class DataHandler {
         extensionTunnelStakes();
         addHuTongLiJiaoData();
         analysisData();
+        calculateSpeed();
         return aggDataList;
     }
 
@@ -242,5 +251,64 @@ public class DataHandler {
                 item.setRoadType(RoadType.WAN_PU_LU_DUAN);
             }
         });
+    }
+
+    private void calculateSpeed() {
+        setUpStartSpeedTemp();
+        Double startSpeedTemp = 0D;
+        for (int i = 0; i < aggDataList.size(); i++) {
+            if (i == 0) {
+                startSpeedTemp = this.startSpeed;
+            } else {
+                startSpeedTemp = aggDataList.get(i - 1).getEndSpeed();
+            }
+
+            if (aggDataList.get(i).getRoadType() == RoadType.DUAN_PING_ZHI_LU_DUAN) {
+                aggDataList.get(i).setStartSpeed(startSpeedTemp);
+                aggDataList.get(i).setEndSpeed(startSpeedTemp);
+            } else if (aggDataList.get(i).getRoadType() == RoadType.PING_ZHI_LU_DUAN) {
+                aggDataList.get(i).setStartSpeed(startSpeedTemp);
+                aggDataList.get(i).setEndSpeed(calculatePingZhiLuDuan(startSpeedTemp, i));
+            }
+        }
+    }
+
+    private void setUpStartSpeedTemp() {
+        if (this.carType == CarType.BIG) {
+            if (this.designSpeed == 120) {
+                this.startSpeed = 80D;
+                this.expectSpeed = 80D;
+            } else if (this.designSpeed == 100) {
+                this.startSpeed = 75D;
+                this.expectSpeed = 80D;
+            } else if (this.designSpeed == 80) {
+                this.startSpeed = 65D;
+                this.expectSpeed = 80D;
+            } else if (this.designSpeed == 60) {
+                this.startSpeed = 50D;
+                this.expectSpeed = 75D;
+            }
+        } else if (this.carType == CarType.SMALL) {
+            if (this.designSpeed == 120) {
+                this.startSpeed = 120D;
+                this.expectSpeed = 120D;
+            } else if (this.designSpeed == 100) {
+                this.startSpeed = 100D;
+                this.expectSpeed = 120D;
+            } else if (this.designSpeed == 80) {
+                this.startSpeed = 80D;
+                this.expectSpeed = 110D;
+            } else if (this.designSpeed == 60) {
+                this.startSpeed = 60D;
+                this.expectSpeed = 90D;
+            }
+        }
+    }
+
+    private double calculatePingZhiLuDuan(Double startSpeedTemp, int i) {
+        return 3.6 * Math.sqrt(
+                Math.pow((startSpeedTemp / 3.6), 2) + 2 * aggDataList.get(i).getLength() *
+                        minAcceleration + (maxAcceleration - minAcceleration) * (1 - startSpeedTemp / this.expectSpeed)
+        );
     }
 }

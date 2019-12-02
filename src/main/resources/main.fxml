@@ -24,13 +24,10 @@
         </Menu>
         <Menu mnemonicParsing="false" text="设计速度">
           <items>
-            <MenuItem fx:id="s_120" mnemonicParsing="false" onAction="#chooseSpeed120" text="120" />
-            <MenuItem fx:id="s_100" mnemonicParsing="false" onAction="#chooseSpeed100" text="100" />
-            <MenuItem fx:id="s_80" mnemonicParsing="false" onAction="#chooseSpeed80" text="80" />
-            <MenuItem fx:id="s_75" mnemonicParsing="false" onAction="#chooseSpeed75" text="75" />
-            <MenuItem fx:id="s_65" mnemonicParsing="false" onAction="#chooseSpeed65" text="65" />
-            <MenuItem fx:id="s_60" mnemonicParsing="false" onAction="#chooseSpeed60" text="60" />
-            <MenuItem fx:id="s_50" mnemonicParsing="false" onAction="#chooseSpeed50" text="50" />
+            <MenuItem fx:id="ds_120" mnemonicParsing="false" onAction="#chooseDesignSpeed120" text="120" />
+            <MenuItem fx:id="ds_100" mnemonicParsing="false" onAction="#chooseDesignSpeed100" text="100" />
+            <MenuItem fx:id="ds_80" mnemonicParsing="false" onAction="#chooseDesignSpeed80" text="80" />
+            <MenuItem fx:id="ds_60" mnemonicParsing="false" onAction="#chooseDesignSpeed60" text="60" />
           </items>
         </Menu>
       </menus>
