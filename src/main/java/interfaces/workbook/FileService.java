@@ -156,7 +156,7 @@ public class FileService implements DataService {
         XSSFCell cell4 = row.createCell(4);
         cell4.setCellValue("纵坡");
         XSSFCell cell5 = row.createCell(5);
-        cell5.setCellValue("构造物类型");
+        cell5.setCellValue("道路构造物");
         XSSFCell cell6 = row.createCell(6);
         cell6.setCellValue("是否为互通立交");
         XSSFCell cell7 = row.createCell(7);
