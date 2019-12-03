@@ -20,5 +20,6 @@ public class AggData {
     private Boolean huTongLiJiao = false;
     private RoadType roadType;
     private Double startSpeed;
+    private Double middleSpeed;
     private Double endSpeed;
 }

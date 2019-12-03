@@ -6,8 +6,8 @@ public enum RoadType {
     PING_ZHI_LU_DUAN("平直路段"),
     DUAN_PING_ZHI_LU_DUAN("短平直路段"),
     ZONG_PU_LU_DUAN("纵坡路段"),
-    PING_QU_LU_DUAN("平区路段"),
-    WAN_PU_LU_DUAN("弯坡路段");
+    PING_QU_LU_DUAN("平曲线路段"),
+    WAN_PU_LU_DUAN("弯坡组合路段");
 
     private String value;
 
