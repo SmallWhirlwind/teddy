@@ -37,6 +37,8 @@ public class DataHandler {
 
     private Double expectSpeed;
 
+    private Double minDriveSpeed;
+
     private Double maxAcceleration;
 
     private Double minAcceleration;
@@ -275,6 +277,10 @@ public class DataHandler {
                 aggDataList.get(i).setStartSpeed(startSpeedTemp);
                 aggDataList.get(i).setMiddleSpeed(calculateMiddlePingQuLuDuan(i));
                 aggDataList.get(i).setEndSpeed(calculateEndPingQuLuDuan(i));
+            } else if (aggDataList.get(i).getRoadType() == RoadType.ZONG_PU_LU_DUAN) {
+                aggDataList.get(i).setStartSpeed(startSpeedTemp);
+                aggDataList.get(i).setMiddleSpeed(calculateMiddleZongPuLuDuan(i));
+                aggDataList.get(i).setEndSpeed(calculateEndZongPuLuDuan(i));
             }
         }
     }
@@ -362,5 +368,89 @@ public class DataHandler {
                 return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * Math.log(currentAggData.getRadius()) + 0.329 * Math.log(aggDataList.get(i - 1).getRadius());
             }
         }
+    }
+
+    private Double calculateMiddleZongPuLuDuan(int i) {
+        AggData currentAggData = aggDataList.get(i);
+        if (currentAggData.getSlope() > 4) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() - 8 * (Math.floor(currentAggData.getLength() / 1000 / 2));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() - 20 * (Math.floor(currentAggData.getLength() / 1000 / 2));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            }
+        } else if (currentAggData.getSlope() <= 4 && currentAggData.getSlope() >= 3) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() - 5 * (Math.floor(currentAggData.getLength() / 1000 / 2));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() - 10 * (Math.floor(currentAggData.getLength() / 1000 / 2));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            }
+        } else if (currentAggData.getSlope() < -4) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() + 20 * (Math.floor(currentAggData.getLength() / 500 / 2));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() + 15 * (Math.floor(currentAggData.getLength() / 500 / 2));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            }
+        } else if (currentAggData.getSlope() >= -4 && currentAggData.getSlope() <= -3) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() + 10 * (Math.floor(currentAggData.getLength() / 500 / 2));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() + 7.5 * (Math.floor(currentAggData.getLength() / 500 / 2));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            }
+        }
+        return null;
+    }
+
+    private Double calculateEndZongPuLuDuan(int i) {
+        AggData currentAggData = aggDataList.get(i);
+        if (currentAggData.getSlope() > 4) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() - 8 * (Math.floor(currentAggData.getLength() / 1000));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() - 20 * (Math.floor(currentAggData.getLength() / 1000));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            }
+        } else if (currentAggData.getSlope() <= 4 && currentAggData.getSlope() >= 3) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() - 5 * (Math.floor(currentAggData.getLength() / 1000));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() - 10 * (Math.floor(currentAggData.getLength() / 1000));
+                return compareAndGetBig(calculateSpeed, this.minDriveSpeed);
+            }
+        } else if (currentAggData.getSlope() < -4) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() + 20 * (Math.floor(currentAggData.getLength() / 500));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() + 15 * (Math.floor(currentAggData.getLength() / 500));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            }
+        } else if (currentAggData.getSlope() >= -4 && currentAggData.getSlope() <= -3) {
+            if (this.carType == CarType.SMALL) {
+                double calculateSpeed = currentAggData.getStartSpeed() + 10 * (Math.floor(currentAggData.getLength() / 500));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            } else {
+                double calculateSpeed = currentAggData.getStartSpeed() + 7.5 * (Math.floor(currentAggData.getLength() / 500));
+                return compareAndGetSmall(calculateSpeed, this.expectSpeed);
+            }
+        }
+        return null;
+    }
+
+    private Double compareAndGetBig(Double a, Double b) {
+        return a > b ? a : b;
+    }
+
+    private Double compareAndGetSmall(Double a, Double b) {
+        return a < b ? a : b;
     }
 }

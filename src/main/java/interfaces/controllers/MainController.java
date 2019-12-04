@@ -95,6 +95,7 @@ public class MainController {
     public void chooseLargeCar(ActionEvent actionEvent) {
         dataHandler.setMaxAcceleration(0.25);
         dataHandler.setMinAcceleration(0.2);
+        dataHandler.setMinDriveSpeed(30D);
         dataHandler.setCarType(CarType.BIG);
     }
 
@@ -102,6 +103,7 @@ public class MainController {
     public void chooseSmallCar(ActionEvent actionEvent) {
         dataHandler.setMaxAcceleration(0.5);
         dataHandler.setMinAcceleration(0.15);
+        dataHandler.setMinDriveSpeed(50D);
         dataHandler.setCarType(CarType.SMALL);
     }
 
