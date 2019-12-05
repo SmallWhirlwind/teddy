@@ -281,6 +281,10 @@ public class DataHandler {
                 aggDataList.get(i).setStartSpeed(startSpeedTemp);
                 aggDataList.get(i).setMiddleSpeed(calculateMiddleZongPuLuDuan(i));
                 aggDataList.get(i).setEndSpeed(calculateEndZongPuLuDuan(i));
+            } else if (aggDataList.get(i).getRoadType() == RoadType.WAN_PU_LU_DUAN) {
+                aggDataList.get(i).setStartSpeed(startSpeedTemp);
+                aggDataList.get(i).setMiddleSpeed(calculateMiddleWanPuLuDuan(i));
+                aggDataList.get(i).setEndSpeed(calculateEndWanPuLuDuan(i));
             }
         }
     }
@@ -323,7 +327,7 @@ public class DataHandler {
                 Math.pow((currentAggData.getStartSpeed() / 3.6), 2) + 2 * currentAggData.getLength() *
                         minAcceleration + (maxAcceleration - minAcceleration) * (1 - currentAggData.getStartSpeed() / this.expectSpeed)
         );
-        return calculateSpeed > this.expectSpeed ? this.expectSpeed : calculateSpeed;
+        return compareAndGetSmall(calculateSpeed, this.expectSpeed);
     }
 
     private Double calculateMiddlePingZhiLuDuan(int i) {
@@ -332,12 +336,12 @@ public class DataHandler {
                 Math.pow((currentAggData.getStartSpeed() / 3.6), 2) + 2 * (currentAggData.getLength() / 2) *
                         minAcceleration + (maxAcceleration - minAcceleration) * (1 - currentAggData.getStartSpeed() / this.expectSpeed)
         );
-        return calculateSpeed > this.expectSpeed ? this.expectSpeed : calculateSpeed;
+        return compareAndGetSmall(calculateSpeed, this.expectSpeed);
     }
 
     private Double calculateMiddlePingQuLuDuan(int i) {
         AggData currentAggData = aggDataList.get(i);
-        if (i == 0 || currentAggData.getRadius() > 1000) {
+        if (i == 0 || aggDataList.get(i - 1).getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return -24.212 + 0.834 * currentAggData.getStartSpeed() + 5.729 * Math.log(currentAggData.getRadius());
             } else {
@@ -345,8 +349,7 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                AggData previousAggData = aggDataList.get(i - 1);
-                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * Math.log(currentAggData.getRadius()) - 5.959 * Math.log(previousAggData.getRadius());
+                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * Math.log(currentAggData.getRadius()) - 5.959 * Math.log(aggDataList.get(i - 1).getRadius());
             } else {
                 return -24.472 + 0.990 * currentAggData.getStartSpeed() + 3.629 * Math.log(currentAggData.getRadius());
             }
@@ -355,7 +358,8 @@ public class DataHandler {
 
     private Double calculateEndPingQuLuDuan(int i) {
         AggData currentAggData = aggDataList.get(i);
-        if (i == aggDataList.size() - 1 || currentAggData.getRadius() > 1000) {
+        AggData previousAggData = aggDataList.get(i - 1);
+        if (i == aggDataList.size() - 1 || previousAggData.getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return 11.946 + 0.908 * currentAggData.getMiddleSpeed();
             } else {
@@ -363,9 +367,9 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * Math.log(currentAggData.getRadius()) + 5.203 * Math.log(aggDataList.get(i - 1).getRadius());
+                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * Math.log(currentAggData.getRadius()) + 5.203 * Math.log(previousAggData.getRadius());
             } else {
-                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * Math.log(currentAggData.getRadius()) + 0.329 * Math.log(aggDataList.get(i - 1).getRadius());
+                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * Math.log(currentAggData.getRadius()) + 0.329 * Math.log(previousAggData.getRadius());
             }
         }
     }
@@ -444,6 +448,41 @@ public class DataHandler {
             }
         }
         return null;
+    }
+
+    private Double calculateEndWanPuLuDuan(int i) {
+        AggData currentAggData = aggDataList.get(i);
+        if (i == 0 || aggDataList.get(i - 1).getRadius() > 1000) {
+            if (this.carType == CarType.SMALL) {
+                return -31.67 + 0.547 * currentAggData.getStartSpeed() + 11.71 * Math.log(currentAggData.getRadius()) - 0.176 * currentAggData.getSlope();
+            } else {
+                return 1.782 + 0.859 * currentAggData.getStartSpeed() - 0.51 * currentAggData.getSlope() + 1.196 * Math.log(currentAggData.getRadius());
+            }
+        } else {
+            if (this.carType == CarType.SMALL) {
+                return 0.750 + 0.802 * currentAggData.getStartSpeed() + 2.717 * Math.log(currentAggData.getRadius()) - 0.281 * Math.log(currentAggData.getSlope());
+            } else {
+                return 1.798 + 0.248 * Math.log(currentAggData.getRadius()) + 0.977 * currentAggData.getStartSpeed() - 0.133 * currentAggData.getSlope() + 0.23 * Math.log(aggDataList.get(i - 1).getRadius());
+            }
+        }
+    }
+
+    private Double calculateMiddleWanPuLuDuan(int i) {
+        AggData currentAggData = aggDataList.get(i);
+        AggData previousAggData = aggDataList.get(i - 1);
+        if (i == aggDataList.size() - 1 || previousAggData.getRadius() > 1000) {
+            if (this.carType == CarType.SMALL) {
+                return 27.294 + 0.720 * currentAggData.getMiddleSpeed() - 1.444 * currentAggData.getSlope();
+            } else {
+                return 13.490 + 0.797 * currentAggData.getMiddleSpeed() - 0.6971 * currentAggData.getSlope();
+            }
+        } else {
+            if (this.carType == CarType.SMALL) {
+                return 1.819 + 0.839 * currentAggData.getMiddleSpeed() + 1.427 * Math.log(currentAggData.getRadius()) + 0.782 * Math.log(previousAggData.getRadius()) - 0.48 * currentAggData.getSlope();
+            } else {
+                return 26.837 + 0.109 * Math.log(previousAggData.getRadius()) - 3.039 * Math.log(currentAggData.getRadius()) - 0.594 * currentAggData.getSlope() + 0.830 * currentAggData.getMiddleSpeed();
+            }
+        }
     }
 
     private Double compareAndGetBig(Double a, Double b) {
