@@ -257,7 +257,7 @@ public class DataHandler {
 
     private void calculateSpeed() {
         setUpStartSpeedTemp();
-        Double startSpeedTemp = 0D;
+        Double startSpeedTemp;
         for (int i = 0; i < aggDataList.size(); i++) {
             if (i == 0) {
                 startSpeedTemp = this.startSpeed;
@@ -285,6 +285,10 @@ public class DataHandler {
                 aggDataList.get(i).setStartSpeed(startSpeedTemp);
                 aggDataList.get(i).setMiddleSpeed(calculateMiddleWanPuLuDuan(i));
                 aggDataList.get(i).setEndSpeed(calculateEndWanPuLuDuan(i));
+            } else if (aggDataList.get(i).getRoadType() == RoadType.SUI_DAO_LU_DUAN) {
+                aggDataList.get(i).setStartSpeed(calculateStartSuiDaoLuDuan(startSpeedTemp));
+                aggDataList.get(i).setMiddleSpeed(calculateMiddleSuiDaoLuDuan(startSpeedTemp));
+                aggDataList.get(i).setEndSpeed(calculateEndSuiDaoLuDuan(startSpeedTemp));
             }
         }
     }
@@ -483,6 +487,30 @@ public class DataHandler {
             } else {
                 return 26.837 + 0.109 * Math.log(postAggData.getRadius()) - 3.039 * Math.log(currentAggData.getRadius()) - 0.594 * postAggData.getSlope() + 0.830 * currentAggData.getMiddleSpeed();
             }
+        }
+    }
+
+    private Double calculateStartSuiDaoLuDuan(Double startSpeed) {
+        if (this.carType == CarType.SMALL) {
+            return 0.99 * startSpeed - 11.07;
+        } else {
+            return 0.98 * startSpeed - 6.56;
+        }
+    }
+
+    private Double calculateMiddleSuiDaoLuDuan(Double startSpeed) {
+        if (this.carType == CarType.SMALL) {
+            return 0.81 * startSpeed + 8.22;
+        } else {
+            return 0.85 * startSpeed + 3.89;
+        }
+    }
+
+    private Double calculateEndSuiDaoLuDuan(Double startSpeed) {
+        if (this.carType == CarType.SMALL) {
+            return 0.74 * startSpeed + 16.43;
+        } else {
+            return 0.45 * startSpeed + 42.61;
         }
     }
 
