@@ -162,11 +162,11 @@ public class FileService implements DataService {
         XSSFCell cell7 = row.createCell(7);
         cell7.setCellValue("路段分析");
         XSSFCell cell8 = row.createCell(8);
-        cell7.setCellValue("入口速度");
+        cell8.setCellValue("入口速度");
         XSSFCell cell9 = row.createCell(9);
-        cell7.setCellValue("中点速度");
+        cell9.setCellValue("中点速度");
         XSSFCell cell10 = row.createCell(10);
-        cell7.setCellValue("出口速度");
+        cell10.setCellValue("出口速度");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
