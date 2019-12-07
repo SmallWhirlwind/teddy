@@ -296,19 +296,26 @@ public class DataHandler {
 
     private void calculateHuTongShiLiTiJiaoCha() {
         for (int i = 0; i < aggDataList.size(); i++) {
-            if (aggDataList.get(i).getHuTongLiJiao()) {
+            AggData currentAggData = aggDataList.get(i);
+            if (currentAggData.getHuTongLiJiao()) {
                 if (this.carType == CarType.SMALL) {
                     if (i != 0) {
-                        aggDataList.get(i).setStartSpeed(aggDataList.get(i).getStartSpeed() - 8);
+                        currentAggData.setStartSpeed(currentAggData.getStartSpeed() - 8);
                     }
-                    aggDataList.get(i).setMiddleSpeed(aggDataList.get(i).getMiddleSpeed() - 8);
-                    aggDataList.get(i).setEndSpeed(aggDataList.get(i).getEndSpeed() - 8);
+                    currentAggData.setMiddleSpeed(currentAggData.getMiddleSpeed() - 8);
+                    currentAggData.setEndSpeed(currentAggData.getEndSpeed() - 8);
+                    if (i != aggDataList.size() - 1 && !aggDataList.get(i + 1).getHuTongLiJiao()) {
+                        aggDataList.get(i + 1).setStartSpeed(aggDataList.get(i + 1).getStartSpeed() - 8);
+                    }
                 } else {
                     if (i != 0) {
-                        aggDataList.get(i).setStartSpeed(aggDataList.get(i).getStartSpeed() - 5);
+                        currentAggData.setStartSpeed(currentAggData.getStartSpeed() - 5);
                     }
-                    aggDataList.get(i).setMiddleSpeed(aggDataList.get(i).getMiddleSpeed() - 5);
-                    aggDataList.get(i).setEndSpeed(aggDataList.get(i).getEndSpeed() - 5);
+                    currentAggData.setMiddleSpeed(currentAggData.getMiddleSpeed() - 5);
+                    currentAggData.setEndSpeed(currentAggData.getEndSpeed() - 5);
+                    if (i != aggDataList.size() - 1 && !aggDataList.get(i + 1).getHuTongLiJiao()) {
+                        aggDataList.get(i + 1).setStartSpeed(aggDataList.get(i + 1).getStartSpeed() - 5);
+                    }
                 }
             }
 
