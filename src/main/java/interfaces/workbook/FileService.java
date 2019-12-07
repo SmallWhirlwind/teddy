@@ -161,6 +161,12 @@ public class FileService implements DataService {
         cell6.setCellValue("是否为互通立交");
         XSSFCell cell7 = row.createCell(7);
         cell7.setCellValue("路段分析");
+        XSSFCell cell8 = row.createCell(8);
+        cell7.setCellValue("入口速度");
+        XSSFCell cell9 = row.createCell(9);
+        cell7.setCellValue("中点速度");
+        XSSFCell cell10 = row.createCell(10);
+        cell7.setCellValue("出口速度");
 
         int rowNum = 1;
         for (AggData aggData : aggDataList) {
@@ -194,6 +200,15 @@ public class FileService implements DataService {
 
             XSSFCell cell_7 = xssfRow.createCell(7);
             cell_7.setCellValue(aggData.getRoadType().getValue());
+
+            XSSFCell cell_8 = xssfRow.createCell(8);
+            cell_8.setCellValue(aggData.getStartSpeed());
+
+            XSSFCell cell_9 = xssfRow.createCell(9);
+            cell_9.setCellValue(aggData.getMiddleSpeed());
+
+            XSSFCell cell_10 = xssfRow.createCell(10);
+            cell_10.setCellValue(aggData.getEndSpeed());
         }
 
         OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
