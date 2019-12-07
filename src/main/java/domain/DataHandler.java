@@ -287,7 +287,7 @@ public class DataHandler {
                 aggDataList.get(i).setMiddleSpeed(calculateMiddleWanPuLuDuan(i));
                 aggDataList.get(i).setEndSpeed(calculateEndWanPuLuDuan(i));
             } else if (aggDataList.get(i).getRoadType() == RoadType.SUI_DAO_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeed);
+                aggDataList.get(i).setStartSpeed(startSpeedTemp);
                 aggDataList.get(i).setMiddleSpeed(calculateMiddleSuiDaoLuDuan(i));
                 aggDataList.get(i).setEndSpeed(calculateEndSuiDaoLuDuan(i));
             }
