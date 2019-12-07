@@ -23,11 +23,15 @@ public class DataHandler {
 
     private List<ZongMianXianXing> zongMianXianXings;
 
-    private List<GouZhaoWu> gouZhaoWus;
+    private List<GouZhaoWu> gouZhaoWus = new ArrayList<>();
+
+    private List<GouZhaoWu> suiDaoGouZhaoWus = new ArrayList<>();
 
     private List<HuTongLiJiao> huTongLiJiaos;
 
-    private List<AggData> aggDataList;
+    private List<AggData> aggDataList = new ArrayList<>();
+
+    private List<AggData> analysisDataList = new ArrayList<>();
 
     private CarType carType;
 
@@ -57,6 +61,8 @@ public class DataHandler {
 
     public void setUpGouZhaoWuData(VBox node) throws Exception {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
+        suiDaoGouZhaoWus.addAll(gouZhaoWus);
+        extensionTunnelStakes();
     }
 
     public void setUpHuTongLiJiaoData(VBox node) throws Exception {
@@ -64,24 +70,32 @@ public class DataHandler {
     }
 
     public void exportAggregatingData() throws Exception {
-        aggDataList = getAggData();
+        getAggData();
         dataService.exportAggData(aggDataList);
     }
 
-    private List<AggData> getAggData() throws Exception {
-        aggDataList = new ArrayList<>();
+    public void exportAnalysisData() throws Exception {
+        getAnalysisData();
+        dataService.exportAnalysisAggData(analysisDataList);
+    }
+
+    private void getAggData() throws Exception {
+        aggDataList.clear();
+        List<Double> totalStakes = getTotalStakesWithoutGouZhaoWu();
+        buildAggData(totalStakes, aggDataList, gouZhaoWus);
+    }
+
+    private void getAnalysisData() throws Exception {
+        analysisDataList.clear();
         List<Double> totalStakes = getTotalStakes();
-        buildAggData(totalStakes);
-        mergeSections();
-        extensionTunnelStakes();
+        buildAggData(totalStakes, analysisDataList, suiDaoGouZhaoWus);
         addHuTongLiJiaoData();
         analysisData();
         calculateSpeed();
         calculateHuTongShiLiTiJiaoCha();
-        return aggDataList;
     }
 
-    private List<Double> getTotalStakes() {
+    private List<Double> getTotalStakesWithoutGouZhaoWu() {
         List<Double> startP = pingMianXianXings.stream().map(PingMianXianXing::getStart).collect(Collectors.toList());
         List<Double> startZ = zongMianXianXings.stream().map(ZongMianXianXing::getStart).collect(Collectors.toList());
         List<Double> endP = pingMianXianXings.stream().map(PingMianXianXing::getEnd).collect(Collectors.toList());
@@ -92,7 +106,20 @@ public class DataHandler {
         return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
     }
 
-    private void buildAggData(List<Double> totalStakes) throws Exception {
+    private List<Double> getTotalStakes() {
+        List<Double> startP = pingMianXianXings.stream().map(PingMianXianXing::getStart).collect(Collectors.toList());
+        List<Double> startZ = zongMianXianXings.stream().map(ZongMianXianXing::getStart).collect(Collectors.toList());
+        List<Double> endP = pingMianXianXings.stream().map(PingMianXianXing::getEnd).collect(Collectors.toList());
+        List<Double> endZ = zongMianXianXings.stream().map(ZongMianXianXing::getEnd).collect(Collectors.toList());
+        List<Double> startG = suiDaoGouZhaoWus.stream().filter(GouZhaoWu::isSuiDao).map(GouZhaoWu::getStart).collect(Collectors.toList());
+        List<Double> endG = suiDaoGouZhaoWus.stream().filter(GouZhaoWu::isSuiDao).map(GouZhaoWu::getEnd).collect(Collectors.toList());
+
+        Stream<Double> startStream = Stream.concat(startG.stream(), Stream.concat(startP.stream(), startZ.stream())).distinct();
+        Stream<Double> endStream = Stream.concat(endG.stream(), Stream.concat(endP.stream(), endZ.stream())).distinct();
+        return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
+    }
+
+    private void buildAggData(List<Double> totalStakes, List<AggData> aggDataList, List<GouZhaoWu> gouZhaoWus) throws Exception {
         for (int i = 1; i < totalStakes.size(); i++) {
             aggDataList.add(AggData.builder()
                     .start(totalStakes.get(i - 1))
@@ -100,12 +127,12 @@ public class DataHandler {
                     .length(totalStakes.get(i) - totalStakes.get(i - 1))
                     .radius(getMatchedRadius(totalStakes.get(i - 1), totalStakes.get(i)))
                     .slope(getMatchedSlope(totalStakes.get(i - 1), totalStakes.get(i)))
-                    .roadStructure(getMatchedRoadStructure(totalStakes.get(i - 1), totalStakes.get(i)))
+                    .roadStructure(getMatchedRoadStructure(totalStakes.get(i - 1), totalStakes.get(i), gouZhaoWus))
                     .build());
         }
     }
 
-    private GouZhaoWuType getMatchedRoadStructure(Double start, Double end) throws Exception {
+    private GouZhaoWuType getMatchedRoadStructure(Double start, Double end, List<GouZhaoWu> gouZhaoWus) throws Exception {
         List<GouZhaoWuType> results = new ArrayList<>();
         for (GouZhaoWu gouZhaoWu : gouZhaoWus) {
             if (gouZhaoWu.getStart() <= start && gouZhaoWu.getEnd() >= start) {
@@ -159,43 +186,43 @@ public class DataHandler {
     }
 
     private void mergeSections() {
-        aggDataList = aggDataList.stream().filter(it -> it.getLength() >= 100).collect(Collectors.toList());
-        for (int i = 1; i < aggDataList.size(); i++) {
-            if (!aggDataList.get(i).getStart().equals(aggDataList.get(i - 1).getEnd())) {
-                aggDataList.get(i).setStart(aggDataList.get(i - 1).getEnd());
+        analysisDataList = analysisDataList.stream().filter(it -> it.getLength() >= 100).collect(Collectors.toList());
+        for (int i = 1; i < analysisDataList.size(); i++) {
+            if (!analysisDataList.get(i).getStart().equals(analysisDataList.get(i - 1).getEnd())) {
+                analysisDataList.get(i).setStart(analysisDataList.get(i - 1).getEnd());
             }
         }
     }
 
     private void extensionTunnelStakes() {
-        Double qian = XiangQian;
-        Double hou = XiangHou;
-        Double startStake = aggDataList.get(0).getStart();
-        Double endStake = aggDataList.get(aggDataList.size() - 1).getEnd();
-        for (int i = 0; i < aggDataList.size(); i++) {
-            AggData currentAggData = aggDataList.get(i);
-            if (currentAggData.getRoadStructure() == GouZhaoWuType.SUI) {
-                currentAggData.setStart(getStart(startStake, currentAggData));
-                currentAggData.setEnd(getEnd(endStake, currentAggData));
+        Double qian = 200D;
+        Double hou = 100D;
+        Double startStake = suiDaoGouZhaoWus.get(0).getStart();
+        Double endStake = suiDaoGouZhaoWus.get(suiDaoGouZhaoWus.size() - 1).getEnd();
+        for (int i = 0; i < suiDaoGouZhaoWus.size(); i++) {
+            GouZhaoWu suiDaoGouZhaoWu = suiDaoGouZhaoWus.get(i);
+            if (suiDaoGouZhaoWu.getRoadStructure() == GouZhaoWuType.SUI) {
+                suiDaoGouZhaoWu.setStart(compareAndGetBig(suiDaoGouZhaoWu.getSuiDaoStart(), startStake));
+                suiDaoGouZhaoWu.setEnd(compareAndGetSmall(suiDaoGouZhaoWu.getSuiDaoEnd(), endStake));
 
                 for (int j = i - 1; j >= 0; j--) {
-                    if (aggDataList.get(j).getStart() < currentAggData.getStart()) {
-                        aggDataList.get(j).setEnd(aggDataList.get(j).getEnd() - qian);
+                    if (suiDaoGouZhaoWus.get(j).getStart() < suiDaoGouZhaoWu.getStart()) {
+                        suiDaoGouZhaoWus.get(j).setEnd(suiDaoGouZhaoWus.get(j).getEnd() - qian);
                         return;
                     } else {
-                        qian -= aggDataList.get(j).getLength();
-                        aggDataList.remove(j);
+                        qian -= suiDaoGouZhaoWus.get(j).getEnd() - suiDaoGouZhaoWus.get(j).getStart();
+                        suiDaoGouZhaoWus.remove(j);
                         j++;
                     }
                 }
 
-                for (int k = i + 1; k < aggDataList.size(); k++) {
-                    if (aggDataList.get(k).getEnd() > currentAggData.getEnd()) {
-                        aggDataList.get(k).setStart(aggDataList.get(k).getStart() + hou);
+                for (int k = i + 1; k < suiDaoGouZhaoWus.size(); k++) {
+                    if (suiDaoGouZhaoWus.get(k).getEnd() > suiDaoGouZhaoWu.getEnd()) {
+                        suiDaoGouZhaoWus.get(k).setStart(suiDaoGouZhaoWus.get(k).getStart() + hou);
                         return;
                     } else {
-                        hou -= aggDataList.get(k).getLength();
-                        aggDataList.remove(k);
+                        hou -= suiDaoGouZhaoWus.get(k).getEnd() - suiDaoGouZhaoWus.get(k).getStart();
+                        suiDaoGouZhaoWus.remove(k);
                         k--;
                     }
                 }
@@ -203,17 +230,17 @@ public class DataHandler {
         }
     }
 
-    private double getEnd(Double endStake, AggData currentAggData) {
-        return currentAggData.getEnd() + XiangHou > endStake ? endStake : currentAggData.getEnd() + XiangHou;
+    private double getEnd(Double endStake, GouZhaoWu currentSuiDaoGouZhao) {
+        return currentSuiDaoGouZhao.getEnd() + XiangHou > endStake ? endStake : currentSuiDaoGouZhao.getEnd() + XiangHou;
     }
 
-    private double getStart(Double startStake, AggData currentAggData) {
-        return currentAggData.getStart() - XiangQian < startStake ? startStake : currentAggData.getStart() - XiangQian;
+    private double getStart(Double startStake, GouZhaoWu currentSuiDaoGouZhao) {
+        return currentSuiDaoGouZhao.getStart() - XiangQian < startStake ? startStake : currentSuiDaoGouZhao.getStart() - XiangQian;
     }
 
     private void addHuTongLiJiaoData() {
         for (HuTongLiJiao huTongLiJiao : huTongLiJiaos) {
-            for (AggData aggData : aggDataList) {
+            for (AggData aggData : analysisDataList) {
                 if (aggData.getEnd() > huTongLiJiao.getStart() && aggData.getEnd() < huTongLiJiao.getEnd()) {
                     aggData.setHuTongLiJiao(true);
                 }
@@ -228,27 +255,27 @@ public class DataHandler {
     }
 
     private void analysisData() {
-        aggDataList.forEach(item -> {
+        analysisDataList.forEach(item -> {
             if (item.getRoadStructure() == GouZhaoWuType.SUI ||
                     item.getRoadStructure() == GouZhaoWuType.QIAO_SUI ||
                     item.getRoadStructure() == GouZhaoWuType.LU_SUI) {
                 item.setRoadType(RoadType.SUI_DAO_LU_DUAN);
-            } else if (item.getRadius() > 1000 &&
-                    item.getSlope() < 3 &&
+            } else if (Math.abs(item.getRadius()) > 1000 &&
+                    Math.abs(item.getSlope()) < 3 &&
                     item.getLength() > 200) {
                 item.setRoadType(RoadType.PING_ZHI_LU_DUAN);
-            } else if (item.getRadius() > 1000 &&
-                    item.getSlope() < 3 &&
+            } else if (Math.abs(item.getRadius()) > 1000 &&
+                    Math.abs(item.getSlope()) < 3 &&
                     item.getLength() < 200) {
                 item.setRoadType(RoadType.DUAN_PING_ZHI_LU_DUAN);
-            } else if (item.getRadius() > 1000 &&
-                    item.getSlope() >= 3) {
+            } else if (Math.abs(item.getRadius()) > 1000 &&
+                    Math.abs(item.getSlope()) >= 3) {
                 item.setRoadType(RoadType.ZONG_PU_LU_DUAN);
-            } else if (item.getRadius() <= 1000 &&
-                    item.getSlope() < 3) {
+            } else if (Math.abs(item.getRadius()) <= 1000 &&
+                    Math.abs(item.getSlope()) < 3) {
                 item.setRoadType(RoadType.PING_QU_LU_DUAN);
-            } else if (item.getRadius() <= 1000 &&
-                    item.getSlope() >= 3) {
+            } else if (Math.abs(item.getRadius()) <= 1000 &&
+                    Math.abs(item.getSlope()) >= 3) {
                 item.setRoadType(RoadType.WAN_PU_LU_DUAN);
             }
         });
@@ -257,44 +284,44 @@ public class DataHandler {
     private void calculateSpeed() {
         setUpStartSpeedTemp();
         Double startSpeedTemp;
-        for (int i = 0; i < aggDataList.size(); i++) {
+        for (int i = 0; i < analysisDataList.size(); i++) {
             if (i == 0) {
                 startSpeedTemp = this.startSpeed;
             } else {
-                startSpeedTemp = aggDataList.get(i - 1).getEndSpeed();
+                startSpeedTemp = analysisDataList.get(i - 1).getEndSpeed();
             }
 
-            if (aggDataList.get(i).getRoadType() == RoadType.DUAN_PING_ZHI_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(startSpeedTemp);
-                aggDataList.get(i).setEndSpeed(startSpeedTemp);
-            } else if (aggDataList.get(i).getRoadType() == RoadType.PING_ZHI_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(calculateMiddlePingZhiLuDuan(i));
-                aggDataList.get(i).setEndSpeed(calculateEndPingZhiLuDuan(i));
-            } else if (aggDataList.get(i).getRoadType() == RoadType.PING_QU_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(calculateMiddlePingQuLuDuan(i));
-                aggDataList.get(i).setEndSpeed(calculateEndPingQuLuDuan(i));
-            } else if (aggDataList.get(i).getRoadType() == RoadType.ZONG_PU_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(calculateMiddleZongPuLuDuan(i));
-                aggDataList.get(i).setEndSpeed(calculateEndZongPuLuDuan(i));
-            } else if (aggDataList.get(i).getRoadType() == RoadType.WAN_PU_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(calculateMiddleWanPuLuDuan(i));
-                aggDataList.get(i).setEndSpeed(calculateEndWanPuLuDuan(i));
-            } else if (aggDataList.get(i).getRoadType() == RoadType.SUI_DAO_LU_DUAN) {
-                aggDataList.get(i).setStartSpeed(startSpeedTemp);
-                aggDataList.get(i).setMiddleSpeed(calculateMiddleSuiDaoLuDuan(i));
-                aggDataList.get(i).setEndSpeed(calculateEndSuiDaoLuDuan(i));
+            if (analysisDataList.get(i).getRoadType() == RoadType.DUAN_PING_ZHI_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(startSpeedTemp);
+                analysisDataList.get(i).setEndSpeed(startSpeedTemp);
+            } else if (analysisDataList.get(i).getRoadType() == RoadType.PING_ZHI_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(calculateMiddlePingZhiLuDuan(i));
+                analysisDataList.get(i).setEndSpeed(calculateEndPingZhiLuDuan(i));
+            } else if (analysisDataList.get(i).getRoadType() == RoadType.PING_QU_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(calculateMiddlePingQuLuDuan(i));
+                analysisDataList.get(i).setEndSpeed(calculateEndPingQuLuDuan(i));
+            } else if (analysisDataList.get(i).getRoadType() == RoadType.ZONG_PU_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(calculateMiddleZongPuLuDuan(i));
+                analysisDataList.get(i).setEndSpeed(calculateEndZongPuLuDuan(i));
+            } else if (analysisDataList.get(i).getRoadType() == RoadType.WAN_PU_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(calculateMiddleWanPuLuDuan(i));
+                analysisDataList.get(i).setEndSpeed(calculateEndWanPuLuDuan(i));
+            } else if (analysisDataList.get(i).getRoadType() == RoadType.SUI_DAO_LU_DUAN) {
+                analysisDataList.get(i).setStartSpeed(startSpeedTemp);
+                analysisDataList.get(i).setMiddleSpeed(calculateMiddleSuiDaoLuDuan(i));
+                analysisDataList.get(i).setEndSpeed(calculateEndSuiDaoLuDuan(i));
             }
         }
     }
 
     private void calculateHuTongShiLiTiJiaoCha() {
-        for (int i = 0; i < aggDataList.size(); i++) {
-            AggData currentAggData = aggDataList.get(i);
+        for (int i = 0; i < analysisDataList.size(); i++) {
+            AggData currentAggData = analysisDataList.get(i);
             if (currentAggData.getHuTongLiJiao()) {
                 if (this.carType == CarType.SMALL) {
                     if (i != 0) {
@@ -302,8 +329,8 @@ public class DataHandler {
                     }
                     currentAggData.setMiddleSpeed(currentAggData.getMiddleSpeed() - 8);
                     currentAggData.setEndSpeed(currentAggData.getEndSpeed() - 8);
-                    if (i != aggDataList.size() - 1 && !aggDataList.get(i + 1).getHuTongLiJiao()) {
-                        aggDataList.get(i + 1).setStartSpeed(aggDataList.get(i + 1).getStartSpeed() - 8);
+                    if (i != analysisDataList.size() - 1 && !analysisDataList.get(i + 1).getHuTongLiJiao()) {
+                        analysisDataList.get(i + 1).setStartSpeed(analysisDataList.get(i + 1).getStartSpeed() - 8);
                     }
                 } else {
                     if (i != 0) {
@@ -311,8 +338,8 @@ public class DataHandler {
                     }
                     currentAggData.setMiddleSpeed(currentAggData.getMiddleSpeed() - 5);
                     currentAggData.setEndSpeed(currentAggData.getEndSpeed() - 5);
-                    if (i != aggDataList.size() - 1 && !aggDataList.get(i + 1).getHuTongLiJiao()) {
-                        aggDataList.get(i + 1).setStartSpeed(aggDataList.get(i + 1).getStartSpeed() - 5);
+                    if (i != analysisDataList.size() - 1 && !analysisDataList.get(i + 1).getHuTongLiJiao()) {
+                        analysisDataList.get(i + 1).setStartSpeed(analysisDataList.get(i + 1).getStartSpeed() - 5);
                     }
                 }
             }
@@ -353,7 +380,7 @@ public class DataHandler {
     }
 
     private double calculateEndPingZhiLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         double calculateSpeed = 3.6 * Math.sqrt(
                 Math.pow((currentAggData.getStartSpeed() / 3.6), 2) + 2 * currentAggData.getLength() *
                         minAcceleration + (maxAcceleration - minAcceleration) * (1 - currentAggData.getStartSpeed() / this.expectSpeed)
@@ -362,7 +389,7 @@ public class DataHandler {
     }
 
     private Double calculateMiddlePingZhiLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         double calculateSpeed = 3.6 * Math.sqrt(
                 Math.pow((currentAggData.getStartSpeed() / 3.6), 2) + 2 * (currentAggData.getLength() / 2) *
                         minAcceleration + (maxAcceleration - minAcceleration) * (1 - currentAggData.getStartSpeed() / this.expectSpeed)
@@ -371,8 +398,8 @@ public class DataHandler {
     }
 
     private Double calculateMiddlePingQuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
-        if (i == 0 || aggDataList.get(i - 1).getRadius() > 1000) {
+        AggData currentAggData = analysisDataList.get(i);
+        if (i == 0 || analysisDataList.get(i - 1).getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return -24.212 + 0.834 * currentAggData.getStartSpeed() + 5.729 * calculateMathLog(currentAggData.getRadius());
             } else {
@@ -380,7 +407,7 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * calculateMathLog(currentAggData.getRadius()) - 5.959 * calculateMathLog(aggDataList.get(i - 1).getRadius());
+                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * calculateMathLog(currentAggData.getRadius()) - 5.959 * calculateMathLog(analysisDataList.get(i - 1).getRadius());
             } else {
                 return -24.472 + 0.990 * currentAggData.getStartSpeed() + 3.629 * calculateMathLog(currentAggData.getRadius());
             }
@@ -388,8 +415,8 @@ public class DataHandler {
     }
 
     private Double calculateEndPingQuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
-        if (i == aggDataList.size() - 1 || aggDataList.get(i - 1).getRadius() > 1000) {
+        AggData currentAggData = analysisDataList.get(i);
+        if (i == analysisDataList.size() - 1 || analysisDataList.get(i - 1).getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return 11.946 + 0.908 * currentAggData.getMiddleSpeed();
             } else {
@@ -397,15 +424,15 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * calculateMathLog(currentAggData.getRadius()) + 5.203 * calculateMathLog(aggDataList.get(i - 1).getRadius());
+                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * calculateMathLog(currentAggData.getRadius()) + 5.203 * calculateMathLog(analysisDataList.get(i - 1).getRadius());
             } else {
-                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * calculateMathLog(currentAggData.getRadius()) + 0.329 * calculateMathLog(aggDataList.get(i - 1).getRadius());
+                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * calculateMathLog(currentAggData.getRadius()) + 0.329 * calculateMathLog(analysisDataList.get(i - 1).getRadius());
             }
         }
     }
 
     private Double calculateMiddleZongPuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         if (currentAggData.getSlope() > 4) {
             if (this.carType == CarType.SMALL) {
                 double calculateSpeed = currentAggData.getStartSpeed() - 8 * (Math.floor(currentAggData.getLength() / 1000 / 2));
@@ -443,7 +470,7 @@ public class DataHandler {
     }
 
     private Double calculateEndZongPuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         if (currentAggData.getSlope() > 4) {
             if (this.carType == CarType.SMALL) {
                 double calculateSpeed = currentAggData.getStartSpeed() - 8 * (Math.floor(currentAggData.getLength() / 1000));
@@ -481,8 +508,8 @@ public class DataHandler {
     }
 
     private Double calculateMiddleWanPuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
-        AggData preAggData = i == 0 ? aggDataList.get(i) : aggDataList.get(i - 1);
+        AggData currentAggData = analysisDataList.get(i);
+        AggData preAggData = i == 0 ? analysisDataList.get(i) : analysisDataList.get(i - 1);
         if (i == 0 || preAggData.getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return -31.67 + 0.547 * currentAggData.getStartSpeed() + 11.71 * calculateMathLog(currentAggData.getRadius()) - 0.176 * preAggData.getSlope();
@@ -499,10 +526,10 @@ public class DataHandler {
     }
 
     private Double calculateEndWanPuLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
-        AggData preAggData = i == 0 ? aggDataList.get(i) : aggDataList.get(i - 1);
-        AggData postAggData = i == aggDataList.size() - 1 ? aggDataList.get(i) : aggDataList.get(i + 1);
-        if (i == aggDataList.size() - 1 || preAggData.getRadius() > 1000) {
+        AggData currentAggData = analysisDataList.get(i);
+        AggData preAggData = i == 0 ? analysisDataList.get(i) : analysisDataList.get(i - 1);
+        AggData postAggData = i == analysisDataList.size() - 1 ? analysisDataList.get(i) : analysisDataList.get(i + 1);
+        if (i == analysisDataList.size() - 1 || preAggData.getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
                 return 27.294 + 0.720 * currentAggData.getMiddleSpeed() - 1.444 * postAggData.getSlope();
             } else {
@@ -518,7 +545,7 @@ public class DataHandler {
     }
 
     private Double calculateMiddleSuiDaoLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         if (this.carType == CarType.SMALL) {
             return 0.81 * currentAggData.getStartSpeed() + 8.22;
         } else {
@@ -527,7 +554,7 @@ public class DataHandler {
     }
 
     private Double calculateEndSuiDaoLuDuan(int i) {
-        AggData currentAggData = aggDataList.get(i);
+        AggData currentAggData = analysisDataList.get(i);
         if (this.carType == CarType.SMALL) {
             return 0.74 * currentAggData.getStartSpeed() + 16.43;
         } else {

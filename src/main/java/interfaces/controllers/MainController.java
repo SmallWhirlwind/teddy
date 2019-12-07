@@ -27,6 +27,8 @@ public class MainController {
     @FXML
     private CheckBox agg_status;
     @FXML
+    private CheckBox analysis_status;
+    @FXML
     public MenuItem ds_120;
     @FXML
     public MenuItem ds_100;
@@ -86,6 +88,16 @@ public class MainController {
         try {
             dataHandler.exportAggregatingData();
             agg_status.setSelected(true);
+        } catch (Exception e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void analysisData(ActionEvent event) {
+        try {
+            dataHandler.exportAnalysisData();
+            analysis_status.setSelected(true);
         } catch (Exception e) {
             popAlert(e.getMessage());
         }

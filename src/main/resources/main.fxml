@@ -13,7 +13,8 @@
             <MenuItem mnemonicParsing="false" onAction="#setUpZongMianXianXingData" text="纵面线形文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpGouZhaoWeData" text="构造物类型文件" />
             <MenuItem mnemonicParsing="false" onAction="#setUpHuTongLiJiaoData" text="互通立交文件" />
-            <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="聚合平纵线形数据" />
+            <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="聚合数据" />
+            <MenuItem mnemonicParsing="false" onAction="#analysisData" text="分析数据" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="车型">
@@ -38,7 +39,8 @@
         <CheckBox fx:id="z_status" layoutX="11.0" layoutY="32.0" mnemonicParsing="false" text="纵面线形文件" />
         <CheckBox fx:id="g_status" layoutX="11.0" layoutY="55.0" mnemonicParsing="false" text="构造物类型文件" />
         <CheckBox fx:id="h_status" layoutX="11.0" layoutY="78.0" mnemonicParsing="false" text="互通立交文件" />
-        <CheckBox fx:id="agg_status" layoutX="11.0" layoutY="101.0" mnemonicParsing="false" text="聚合平纵线形数据" />
+        <CheckBox fx:id="agg_status" layoutX="11.0" layoutY="101.0" mnemonicParsing="false" text="聚合数据" />
+        <CheckBox fx:id="analysis_status" layoutX="11.0" layoutY="124.0" mnemonicParsing="false" text="分析数据" />
       </children>
     </AnchorPane>
   </children>

@@ -135,7 +135,61 @@ public class FileService implements DataService {
     }
 
     @Override
-    public void exportAggData(List<AggData> aggDataList) throws IOException {
+    public void exportAggData(List<AggData> AggDataList) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet spreadsheet = workbook.createSheet();
+
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        XSSFDataFormat format = workbook.createDataFormat();
+        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+
+        XSSFRow row = spreadsheet.createRow(0);
+        row.createCell(0).setCellValue("序号");
+        row.createCell(1).setCellValue("起点桩号");
+        row.createCell(2).setCellValue("终点桩号");
+        row.createCell(3).setCellValue("长度");
+        row.createCell(4).setCellValue("半径");
+        row.createCell(5).setCellValue("纵坡");
+        row.createCell(6).setCellValue("道路构造物");
+
+        int rowNum = 0;
+        for (AggData aggData : AggDataList) {
+            XSSFRow xssfRow = spreadsheet.createRow(++rowNum);
+
+            xssfRow.createCell(0).setCellValue(rowNum);
+
+            XSSFCell cell_1 = xssfRow.createCell(1);
+            cell_1.setCellValue(aggData.getStart());
+            cell_1.setCellStyle(cellStyle);
+
+            XSSFCell cell_2 = xssfRow.createCell(2);
+            cell_2.setCellStyle(cellStyle);
+            cell_2.setCellValue(aggData.getEnd());
+
+            XSSFCell cell_3 = xssfRow.createCell(3);
+            cell_3.setCellStyle(cellStyle);
+            cell_3.setCellValue(aggData.getLength());
+
+            XSSFCell cell_4 = xssfRow.createCell(4);
+            cell_4.setCellStyle(cellStyle);
+            cell_4.setCellValue(aggData.getRadius());
+
+            XSSFCell cell_5 = xssfRow.createCell(5);
+            cell_5.setCellStyle(cellStyle);
+            cell_5.setCellValue(aggData.getSlope());
+
+            XSSFCell cell_6 = xssfRow.createCell(6);
+            cell_6.setCellValue(aggData.getRoadStructure().getValue());
+        }
+
+        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
+        workbook.write(out);
+        out.close();
+        workbook.close();
+    }
+
+    @Override
+    public void exportAnalysisAggData(List<AggData> analysisDataList) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet spreadsheet = workbook.createSheet();
 
@@ -145,73 +199,59 @@ public class FileService implements DataService {
         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
 
         XSSFRow row = spreadsheet.createRow(0);
-        XSSFCell cell0 = row.createCell(0);
-        cell0.setCellValue("起点桩号");
-        XSSFCell cell1 = row.createCell(1);
-        cell1.setCellValue("终点桩号");
-        XSSFCell cell2 = row.createCell(2);
-        cell2.setCellValue("长度");
-        XSSFCell cell3 = row.createCell(3);
-        cell3.setCellValue("半径");
-        XSSFCell cell4 = row.createCell(4);
-        cell4.setCellValue("纵坡");
-        XSSFCell cell5 = row.createCell(5);
-        cell5.setCellValue("道路构造物");
-        XSSFCell cell6 = row.createCell(6);
-        cell6.setCellValue("是否为互通立交");
-        XSSFCell cell7 = row.createCell(7);
-        cell7.setCellValue("路段分析");
-        XSSFCell cell8 = row.createCell(8);
-        cell8.setCellValue("入口速度");
-        XSSFCell cell9 = row.createCell(9);
-        cell9.setCellValue("中点速度");
-        XSSFCell cell10 = row.createCell(10);
-        cell10.setCellValue("出口速度");
+        row.createCell(0).setCellValue("序号");
+        row.createCell(1).setCellValue("起点桩号");
+        row.createCell(2).setCellValue("终点桩号");
+        row.createCell(3).setCellValue("长度");
+        row.createCell(4).setCellValue("半径");
+        row.createCell(5).setCellValue("纵坡");
+        row.createCell(6).setCellValue("道路构造物");
+        row.createCell(7).setCellValue("是否为互通立交");
+        row.createCell(8).setCellValue("路段分析");
+        row.createCell(9).setCellValue("入口速度");
+        row.createCell(10).setCellValue("中点速度");
+        row.createCell(11).setCellValue("出口速度");
 
-        int rowNum = 1;
-        for (AggData aggData : aggDataList) {
-            XSSFRow xssfRow = spreadsheet.createRow(rowNum++);
+        int rowNum = 0;
+        for (AggData aggData : analysisDataList) {
+            XSSFRow xssfRow = spreadsheet.createRow(++rowNum);
 
-            XSSFCell cell_0 = xssfRow.createCell(0);
-            cell_0.setCellValue(aggData.getStart());
-            cell_0.setCellStyle(cellStyle);
+            xssfRow.createCell(0).setCellValue(rowNum);
 
             XSSFCell cell_1 = xssfRow.createCell(1);
+            cell_1.setCellValue(aggData.getStart());
             cell_1.setCellStyle(cellStyle);
-            cell_1.setCellValue(aggData.getEnd());
 
             XSSFCell cell_2 = xssfRow.createCell(2);
             cell_2.setCellStyle(cellStyle);
-            cell_2.setCellValue(aggData.getLength());
+            cell_2.setCellValue(aggData.getEnd());
 
             XSSFCell cell_3 = xssfRow.createCell(3);
             cell_3.setCellStyle(cellStyle);
-            cell_3.setCellValue(aggData.getRadius());
+            cell_3.setCellValue(aggData.getLength());
 
             XSSFCell cell_4 = xssfRow.createCell(4);
             cell_4.setCellStyle(cellStyle);
-            cell_4.setCellValue(aggData.getSlope());
+            cell_4.setCellValue(aggData.getRadius());
 
             XSSFCell cell_5 = xssfRow.createCell(5);
-            cell_5.setCellValue(aggData.getRoadStructure().getValue());
+            cell_5.setCellStyle(cellStyle);
+            cell_5.setCellValue(aggData.getSlope());
 
-            XSSFCell cell_6 = xssfRow.createCell(6);
-            cell_6.setCellValue(aggData.getHuTongLiJiao().toString());
+            xssfRow.createCell(6).setCellValue(aggData.getRoadStructure().getValue());
 
-            XSSFCell cell_7 = xssfRow.createCell(7);
-            cell_7.setCellValue(aggData.getRoadType().getValue());
+            xssfRow.createCell(7).setCellValue(aggData.getHuTongLiJiao().toString());
 
-            XSSFCell cell_8 = xssfRow.createCell(8);
-            cell_8.setCellValue(aggData.getStartSpeed());
+            xssfRow.createCell(8).setCellValue(aggData.getRoadType().getValue());
 
-            XSSFCell cell_9 = xssfRow.createCell(9);
-            cell_9.setCellValue(aggData.getMiddleSpeed());
+            xssfRow.createCell(9).setCellValue(aggData.getStartSpeed());
 
-            XSSFCell cell_10 = xssfRow.createCell(10);
-            cell_10.setCellValue(aggData.getEndSpeed());
+            xssfRow.createCell(10).setCellValue(aggData.getMiddleSpeed());
+
+            xssfRow.createCell(11).setCellValue(aggData.getEndSpeed());
         }
 
-        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
+        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/analysis_data.xlsx");
         workbook.write(out);
         out.close();
         workbook.close();

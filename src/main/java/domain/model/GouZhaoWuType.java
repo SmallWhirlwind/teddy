@@ -4,7 +4,7 @@ public enum GouZhaoWuType {
     LU("路基路段"),
     QIAO("桥梁路段"),
     SUI("隧道路段"),
-    LU_QIAO("桥路路段"),
+    LU_QIAO("路桥路段"),
     LU_SUI("路隧路段"),
     QIAO_SUI("桥隧路段"),
     ERROR("错误类型");
