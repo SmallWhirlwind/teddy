@@ -107,16 +107,11 @@ public class DataHandler {
     }
 
     private List<Double> getTotalStakes() {
-        List<Double> startP = pingMianXianXings.stream().map(PingMianXianXing::getStart).collect(Collectors.toList());
-        List<Double> startZ = zongMianXianXings.stream().map(ZongMianXianXing::getStart).collect(Collectors.toList());
-        List<Double> endP = pingMianXianXings.stream().map(PingMianXianXing::getEnd).collect(Collectors.toList());
-        List<Double> endZ = zongMianXianXings.stream().map(ZongMianXianXing::getEnd).collect(Collectors.toList());
+        Stream<Double> totalStakes = getTotalStakesWithoutGouZhaoWu().stream();
         List<Double> startG = suiDaoGouZhaoWus.stream().filter(GouZhaoWu::isSuiDao).map(GouZhaoWu::getStart).collect(Collectors.toList());
         List<Double> endG = suiDaoGouZhaoWus.stream().filter(GouZhaoWu::isSuiDao).map(GouZhaoWu::getEnd).collect(Collectors.toList());
-
-        Stream<Double> startStream = Stream.concat(startG.stream(), Stream.concat(startP.stream(), startZ.stream())).distinct();
-        Stream<Double> endStream = Stream.concat(endG.stream(), Stream.concat(endP.stream(), endZ.stream())).distinct();
-        return Stream.concat(startStream, endStream).distinct().sorted().collect(Collectors.toList());
+        Stream<Double> distinctGouZhaoWu = Stream.concat(startG.stream(), endG.stream()).distinct();
+        return Stream.concat(totalStakes, distinctGouZhaoWu).distinct().sorted().collect(Collectors.toList());
     }
 
     private void buildAggData(List<Double> totalStakes, List<AggData> aggDataList, List<GouZhaoWu> gouZhaoWus) throws Exception {
