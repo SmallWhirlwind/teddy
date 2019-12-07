@@ -229,9 +229,7 @@ public class DataHandler {
 
     private void analysisData() {
         aggDataList.forEach(item -> {
-            if (item.getHuTongLiJiao()) {
-                item.setRoadType(RoadType.HU_TONG_LI_JIAO_LU_DUAN);
-            } else if (item.getRoadStructure() == GouZhaoWuType.SUI ||
+            if (item.getRoadStructure() == GouZhaoWuType.SUI ||
                     item.getRoadStructure() == GouZhaoWuType.QIAO_SUI ||
                     item.getRoadStructure() == GouZhaoWuType.LU_SUI) {
                 item.setRoadType(RoadType.SUI_DAO_LU_DUAN);
