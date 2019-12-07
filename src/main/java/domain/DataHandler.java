@@ -376,15 +376,15 @@ public class DataHandler {
         AggData currentAggData = aggDataList.get(i);
         if (i == 0 || aggDataList.get(i - 1).getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
-                return -24.212 + 0.834 * currentAggData.getStartSpeed() + 5.729 * Math.log(currentAggData.getRadius());
+                return -24.212 + 0.834 * currentAggData.getStartSpeed() + 5.729 * calculateMathLog(currentAggData.getRadius());
             } else {
-                return -9.432 + 0.963 * currentAggData.getStartSpeed() + 1.522 * Math.log(currentAggData.getRadius());
+                return -9.432 + 0.963 * currentAggData.getStartSpeed() + 1.522 * calculateMathLog(currentAggData.getRadius());
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * Math.log(currentAggData.getRadius()) - 5.959 * Math.log(aggDataList.get(i - 1).getRadius());
+                return 1.277 + 0.942 * currentAggData.getStartSpeed() + 6.19 * calculateMathLog(currentAggData.getRadius()) - 5.959 * calculateMathLog(aggDataList.get(i - 1).getRadius());
             } else {
-                return -24.472 + 0.990 * currentAggData.getStartSpeed() + 3.629 * Math.log(currentAggData.getRadius());
+                return -24.472 + 0.990 * currentAggData.getStartSpeed() + 3.629 * calculateMathLog(currentAggData.getRadius());
             }
         }
     }
@@ -399,9 +399,9 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * Math.log(currentAggData.getRadius()) + 5.203 * Math.log(aggDataList.get(i - 1).getRadius());
+                return -11.299 + 0.936 * currentAggData.getMiddleSpeed() - 2.060 * calculateMathLog(currentAggData.getRadius()) + 5.203 * calculateMathLog(aggDataList.get(i - 1).getRadius());
             } else {
-                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * Math.log(currentAggData.getRadius()) + 0.329 * Math.log(aggDataList.get(i - 1).getRadius());
+                return 5.899 + 0.925 * currentAggData.getMiddleSpeed() - 1.005 * calculateMathLog(currentAggData.getRadius()) + 0.329 * calculateMathLog(aggDataList.get(i - 1).getRadius());
             }
         }
     }
@@ -487,15 +487,15 @@ public class DataHandler {
         AggData preAggData = i == 0 ? aggDataList.get(i) : aggDataList.get(i - 1);
         if (i == 0 || preAggData.getRadius() > 1000) {
             if (this.carType == CarType.SMALL) {
-                return -31.67 + 0.547 * currentAggData.getStartSpeed() + 11.71 * Math.log(currentAggData.getRadius()) - 0.176 * preAggData.getSlope();
+                return -31.67 + 0.547 * currentAggData.getStartSpeed() + 11.71 * calculateMathLog(currentAggData.getRadius()) - 0.176 * preAggData.getSlope();
             } else {
-                return 1.782 + 0.859 * currentAggData.getStartSpeed() - 0.51 * preAggData.getSlope() + 1.196 * Math.log(currentAggData.getRadius());
+                return 1.782 + 0.859 * currentAggData.getStartSpeed() - 0.51 * preAggData.getSlope() + 1.196 * calculateMathLog(currentAggData.getRadius());
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return 0.750 + 0.802 * currentAggData.getStartSpeed() + 2.717 * Math.log(currentAggData.getRadius()) - 0.281 * Math.log(preAggData.getSlope());
+                return 0.750 + 0.802 * currentAggData.getStartSpeed() + 2.717 * calculateMathLog(currentAggData.getRadius()) - 0.281 * calculateMathLog(preAggData.getSlope());
             } else {
-                return 1.798 + 0.248 * Math.log(currentAggData.getRadius()) + 0.977 * currentAggData.getStartSpeed() - 0.133 * preAggData.getSlope() + 0.23 * Math.log(preAggData.getRadius());
+                return 1.798 + 0.248 * calculateMathLog(currentAggData.getRadius()) + 0.977 * currentAggData.getStartSpeed() - 0.133 * preAggData.getSlope() + 0.23 * calculateMathLog(preAggData.getRadius());
             }
         }
     }
@@ -512,9 +512,9 @@ public class DataHandler {
             }
         } else {
             if (this.carType == CarType.SMALL) {
-                return 1.819 + 0.839 * currentAggData.getMiddleSpeed() + 1.427 * Math.log(currentAggData.getRadius()) + 0.782 * Math.log(postAggData.getRadius()) - 0.48 * postAggData.getSlope();
+                return 1.819 + 0.839 * currentAggData.getMiddleSpeed() + 1.427 * calculateMathLog(currentAggData.getRadius()) + 0.782 * calculateMathLog(postAggData.getRadius()) - 0.48 * postAggData.getSlope();
             } else {
-                return 26.837 + 0.109 * Math.log(postAggData.getRadius()) - 3.039 * Math.log(currentAggData.getRadius()) - 0.594 * postAggData.getSlope() + 0.830 * currentAggData.getMiddleSpeed();
+                return 26.837 + 0.109 * calculateMathLog(postAggData.getRadius()) - 3.039 * calculateMathLog(currentAggData.getRadius()) - 0.594 * postAggData.getSlope() + 0.830 * currentAggData.getMiddleSpeed();
             }
         }
     }
@@ -543,5 +543,9 @@ public class DataHandler {
 
     private Double compareAndGetSmall(Double a, Double b) {
         return a < b ? a : b;
+    }
+
+    private double calculateMathLog(Double radius) {
+        return Math.log(Math.abs(radius));
     }
 }
