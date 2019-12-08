@@ -22,4 +22,8 @@ public class AggData {
     private Double startSpeed;
     private Double middleSpeed;
     private Double endSpeed;
+
+    public String getHuTongLiJiaoValue() {
+        return this.huTongLiJiao ? "互通立交" : "";
+    }
 }
