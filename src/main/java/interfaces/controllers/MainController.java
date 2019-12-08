@@ -4,6 +4,7 @@ import domain.CarType;
 import domain.DataHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
@@ -28,6 +29,8 @@ public class MainController {
     private CheckBox agg_status;
     @FXML
     private CheckBox analysis_status;
+    @FXML
+    private LineChart line_chart;
     @FXML
     public MenuItem ds_120;
     @FXML
