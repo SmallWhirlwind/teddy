@@ -14,9 +14,9 @@ public interface DataService {
 
     List<GouZhaoWu> getGouZhaoWuData(VBox node) throws Exception;
 
-    void exportAggData(List<AggData> aggDataList) throws IOException;
+    void exportAggData(List<AggData> aggDataList, VBox node) throws Exception;
 
-    void exportAnalysisAggData(List<AggData> analysisDataList) throws IOException;
+    void exportAnalysisAggData(List<AggData> analysisDataList, VBox node) throws Exception;
 
     List<HuTongLiJiao> getHuTongLiJiaoData(VBox node) throws Exception;
 }

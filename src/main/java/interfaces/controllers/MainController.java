@@ -89,7 +89,7 @@ public class MainController {
     @FXML
     protected void aggregatingData(ActionEvent event) {
         try {
-            dataHandler.exportAggregatingData();
+            dataHandler.exportAggregatingData(node);
             agg_status.setSelected(true);
         } catch (Exception e) {
             popAlert(e.getMessage());
@@ -99,7 +99,7 @@ public class MainController {
     @FXML
     protected void analysisData(ActionEvent event) {
         try {
-            dataHandler.exportAnalysisData();
+            dataHandler.exportAnalysisData(node);
             analysis_status.setSelected(true);
         } catch (Exception e) {
             popAlert(e.getMessage());

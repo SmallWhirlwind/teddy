@@ -69,14 +69,14 @@ public class DataHandler {
         huTongLiJiaos = dataService.getHuTongLiJiaoData(node);
     }
 
-    public void exportAggregatingData() throws Exception {
+    public void exportAggregatingData(VBox node) throws Exception {
         getAggData();
-        dataService.exportAggData(aggDataList);
+        dataService.exportAggData(aggDataList, node);
     }
 
-    public void exportAnalysisData() throws Exception {
+    public void exportAnalysisData(VBox node) throws Exception {
         getAnalysisData();
-        dataService.exportAnalysisAggData(analysisDataList);
+        dataService.exportAnalysisAggData(analysisDataList, node);
     }
 
     private void getAggData() throws Exception {

@@ -3,6 +3,7 @@ package interfaces.workbook;
 import domain.DataService;
 import domain.model.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -29,7 +30,7 @@ public class FileService implements DataService {
         this.dataFormatter = new DataFormatter();
     }
 
-    private File openFolder(VBox node) {
+    private File chooseFile(VBox node) {
         fileChooser.setTitle("View Pictures");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))
         );
@@ -39,10 +40,20 @@ public class FileService implements DataService {
         return fileChooser.showOpenDialog(node.getScene().getWindow());
     }
 
+    private String chooseFolder(VBox node) throws Exception {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose Folder");
+        File directory = directoryChooser.showDialog(node.getScene().getWindow());
+        if (directory != null) {
+            return directory.getAbsolutePath();
+        }
+        throw new Exception("Folder error");
+    }
+
     @Override
     public List<PingMianXianXing> getPingMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         List<PingMianXianXing> pingMianXianXings = new ArrayList<>();
-        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        Workbook workbook = WorkbookFactory.create(this.chooseFile(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
@@ -66,7 +77,7 @@ public class FileService implements DataService {
     @Override
     public List<ZongMianXianXing> getZongMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         List<ZongMianXianXing> zongMianXianXings = new ArrayList<>();
-        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        Workbook workbook = WorkbookFactory.create(this.chooseFile(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
@@ -90,7 +101,7 @@ public class FileService implements DataService {
     @Override
     public List<GouZhaoWu> getGouZhaoWuData(VBox node) throws Exception {
         List<GouZhaoWu> gouZhaoWus = new ArrayList<>();
-        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        Workbook workbook = WorkbookFactory.create(this.chooseFile(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
@@ -114,7 +125,7 @@ public class FileService implements DataService {
     @Override
     public List<HuTongLiJiao> getHuTongLiJiaoData(VBox node) throws Exception {
         List<HuTongLiJiao> huTongLiJiaos = new ArrayList<>();
-        Workbook workbook = WorkbookFactory.create(this.openFolder(node));
+        Workbook workbook = WorkbookFactory.create(this.chooseFile(node));
         for (Row row : workbook.getSheetAt(0)) {
             if (dataFormatter.formatCellValue(row.getCell(0)).equals("")) {
                 break;
@@ -135,7 +146,7 @@ public class FileService implements DataService {
     }
 
     @Override
-    public void exportAggData(List<AggData> AggDataList) throws IOException {
+    public void exportAggData(List<AggData> AggDataList, VBox node) throws Exception {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet spreadsheet = workbook.createSheet();
 
@@ -181,15 +192,15 @@ public class FileService implements DataService {
             XSSFCell cell_6 = xssfRow.createCell(6);
             cell_6.setCellValue(aggData.getRoadStructure().getValue());
         }
-
-        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/agg_data.xlsx");
+        String chooseFolderPath = chooseFolder(node);
+        OutputStream out = new FileOutputStream(chooseFolderPath + "/agg_data.xlsx");
         workbook.write(out);
         out.close();
         workbook.close();
     }
 
     @Override
-    public void exportAnalysisAggData(List<AggData> analysisDataList) throws IOException {
+    public void exportAnalysisAggData(List<AggData> analysisDataList, VBox node) throws Exception {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet spreadsheet = workbook.createSheet();
 
@@ -251,7 +262,8 @@ public class FileService implements DataService {
             xssfRow.createCell(11).setCellValue(aggData.getEndSpeed());
         }
 
-        OutputStream out = new FileOutputStream(System.getProperty("user.home") + "/analysis_data.xlsx");
+        String chooseFolderPath = chooseFolder(node);
+        OutputStream out = new FileOutputStream(chooseFolderPath + "/analysis_data.xlsx");
         workbook.write(out);
         out.close();
         workbook.close();
