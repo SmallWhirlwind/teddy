@@ -61,7 +61,7 @@ public class DataHandler {
 
     public void setUpGouZhaoWuData(VBox node) throws Exception {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
-        suiDaoGouZhaoWus.addAll(gouZhaoWus);
+        suiDaoGouZhaoWus = gouZhaoWus.stream().map(GouZhaoWu::clone).collect(Collectors.toList());
         extensionTunnelStakes();
     }
 
@@ -130,13 +130,13 @@ public class DataHandler {
     private GouZhaoWuType getMatchedRoadStructure(Double start, Double end, List<GouZhaoWu> gouZhaoWus) throws Exception {
         List<GouZhaoWuType> results = new ArrayList<>();
         for (GouZhaoWu gouZhaoWu : gouZhaoWus) {
-            if (gouZhaoWu.getStart() <= start && gouZhaoWu.getEnd() >= start) {
+            if (start < gouZhaoWu.getStart() && gouZhaoWu.getStart() < end) {
                 results.add(gouZhaoWu.getRoadStructure());
             }
-            if (gouZhaoWu.getStart() >= start && gouZhaoWu.getEnd() <= end) {
+            if (start < gouZhaoWu.getEnd() && gouZhaoWu.getEnd() < end) {
                 results.add(gouZhaoWu.getRoadStructure());
             }
-            if (gouZhaoWu.getStart() <= end && gouZhaoWu.getEnd() >= end) {
+            if (gouZhaoWu.getStart() <= start && end <= gouZhaoWu.getEnd()) {
                 results.add(gouZhaoWu.getRoadStructure());
             }
         }
@@ -190,11 +190,13 @@ public class DataHandler {
     }
 
     private void extensionTunnelStakes() {
-        Double qian = 200D;
-        Double hou = 100D;
+        Double qian;
+        Double hou;
         Double startStake = suiDaoGouZhaoWus.get(0).getStart();
         Double endStake = suiDaoGouZhaoWus.get(suiDaoGouZhaoWus.size() - 1).getEnd();
         for (int i = 0; i < suiDaoGouZhaoWus.size(); i++) {
+            qian = 200D;
+            hou = 100D;
             GouZhaoWu suiDaoGouZhaoWu = suiDaoGouZhaoWus.get(i);
             if (suiDaoGouZhaoWu.getRoadStructure() == GouZhaoWuType.SUI) {
                 suiDaoGouZhaoWu.setStart(compareAndGetBig(suiDaoGouZhaoWu.getSuiDaoStart(), startStake));
@@ -202,19 +204,19 @@ public class DataHandler {
 
                 for (int j = i - 1; j >= 0; j--) {
                     if (suiDaoGouZhaoWus.get(j).getStart() < suiDaoGouZhaoWu.getStart()) {
-                        suiDaoGouZhaoWus.get(j).setEnd(suiDaoGouZhaoWus.get(j).getEnd() - qian);
-                        return;
+                        suiDaoGouZhaoWus.get(j).setEnd(suiDaoGouZhaoWu.getStart());
+                        break;
                     } else {
                         qian -= suiDaoGouZhaoWus.get(j).getEnd() - suiDaoGouZhaoWus.get(j).getStart();
                         suiDaoGouZhaoWus.remove(j);
-                        j++;
+                        i--;
                     }
                 }
 
                 for (int k = i + 1; k < suiDaoGouZhaoWus.size(); k++) {
                     if (suiDaoGouZhaoWus.get(k).getEnd() > suiDaoGouZhaoWu.getEnd()) {
-                        suiDaoGouZhaoWus.get(k).setStart(suiDaoGouZhaoWus.get(k).getStart() + hou);
-                        return;
+                        suiDaoGouZhaoWus.get(k).setStart(suiDaoGouZhaoWu.getEnd());
+                        break;
                     } else {
                         hou -= suiDaoGouZhaoWus.get(k).getEnd() - suiDaoGouZhaoWus.get(k).getStart();
                         suiDaoGouZhaoWus.remove(k);

@@ -91,7 +91,7 @@ public class MainController {
         try {
             dataHandler.exportAggregatingData(node);
             agg_status.setSelected(true);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             popAlert(e.getMessage());
         }
     }
@@ -101,7 +101,7 @@ public class MainController {
         try {
             dataHandler.exportAnalysisData(node);
             analysis_status.setSelected(true);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             popAlert(e.getMessage());
         }
     }

@@ -25,4 +25,12 @@ public class GouZhaoWu {
     public Double getSuiDaoEnd() {
         return this.end + 100;
     }
+
+    public GouZhaoWu clone() {
+        return GouZhaoWu.builder()
+                .start(this.getStart())
+                .end(this.getEnd())
+                .roadStructure(this.roadStructure)
+                .build();
+    }
 }
