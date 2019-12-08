@@ -217,8 +217,8 @@ public class FileService implements DataService {
         row.createCell(4).setCellValue("半径");
         row.createCell(5).setCellValue("纵坡");
         row.createCell(6).setCellValue("道路构造物");
-        row.createCell(7).setCellValue("互通立交");
-        row.createCell(8).setCellValue("路段类型");
+        row.createCell(7).setCellValue("路段类型");
+        row.createCell(8).setCellValue("互通立交");
 
         int rowNum = 0;
         for (AggData aggData : aggDataList) {
@@ -248,9 +248,9 @@ public class FileService implements DataService {
 
             xssfRow.createCell(6).setCellValue(aggData.getRoadStructure().getValue());
 
-            xssfRow.createCell(7).setCellValue(aggData.getHuTongLiJiaoValue());
+            xssfRow.createCell(7).setCellValue(aggData.getRoadType().getValue());
 
-            xssfRow.createCell(8).setCellValue(aggData.getRoadType().getValue());
+            xssfRow.createCell(8).setCellValue(aggData.getHuTongLiJiaoValue());
         }
 
         String chooseFolderPath = chooseFolder(node);
@@ -279,8 +279,8 @@ public class FileService implements DataService {
         row.createCell(4).setCellValue("半径");
         row.createCell(5).setCellValue("纵坡");
         row.createCell(6).setCellValue("道路构造物");
-        row.createCell(7).setCellValue("互通立交");
-        row.createCell(8).setCellValue("路段类型");
+        row.createCell(7).setCellValue("路段类型");
+        row.createCell(8).setCellValue("互通立交");
         row.createCell(9).setCellValue("入口速度");
         row.createCell(10).setCellValue("中点速度");
         row.createCell(11).setCellValue("出口速度");
@@ -313,9 +313,9 @@ public class FileService implements DataService {
 
             xssfRow.createCell(6).setCellValue(aggData.getRoadStructure().getValue());
 
-            xssfRow.createCell(7).setCellValue(aggData.getHuTongLiJiaoValue());
+            xssfRow.createCell(7).setCellValue(aggData.getRoadType().getValue());
 
-            xssfRow.createCell(8).setCellValue(aggData.getRoadType().getValue());
+            xssfRow.createCell(8).setCellValue(aggData.getHuTongLiJiaoValue());
 
             xssfRow.createCell(9).setCellValue(aggData.getStartSpeed());
 
