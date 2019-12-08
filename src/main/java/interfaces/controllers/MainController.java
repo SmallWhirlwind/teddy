@@ -26,10 +26,6 @@ public class MainController {
     @FXML
     private CheckBox h_status;
     @FXML
-    private CheckBox agg_status;
-    @FXML
-    private CheckBox analysis_status;
-    @FXML
     private LineChart line_chart;
     @FXML
     public MenuItem ds_120;
@@ -90,7 +86,15 @@ public class MainController {
     protected void aggregatingData(ActionEvent event) {
         try {
             dataHandler.exportAggregatingData(node);
-            agg_status.setSelected(true);
+        } catch (Throwable e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void aggregatingRoadData(ActionEvent event) {
+        try {
+            dataHandler.exportAggregatingRoadData(node);
         } catch (Throwable e) {
             popAlert(e.getMessage());
         }
@@ -100,7 +104,6 @@ public class MainController {
     protected void analysisData(ActionEvent event) {
         try {
             dataHandler.exportAnalysisData(node);
-            analysis_status.setSelected(true);
         } catch (Throwable e) {
             popAlert(e.getMessage());
         }

@@ -47,14 +47,14 @@
                 <Menu mnemonicParsing="false" text="分析路段">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="道路结构分析"/>
-                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="路段划分"/>
+                        <MenuItem mnemonicParsing="false" onAction="#aggregatingRoadData" text="路段划分"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="分析计算">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="速度预测"/>
-                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="运行速度图"/>
-                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="安全评价"/>
+                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="速度预测"/>
+                        <MenuItem mnemonicParsing="false" text="运行速度图"/>
+                        <MenuItem mnemonicParsing="false" text="安全评价"/>
                     </items>
                 </Menu>
             </menus>
@@ -65,8 +65,6 @@
                 <CheckBox fx:id="z_status" layoutX="11.0" layoutY="32.0" mnemonicParsing="false" text="纵面线形文件"/>
                 <CheckBox fx:id="g_status" layoutX="132.0" layoutY="9.0" mnemonicParsing="false" text="构造物类型文件"/>
                 <CheckBox fx:id="h_status" layoutX="132.0" layoutY="32.0" mnemonicParsing="false" text="互通立交文件"/>
-                <CheckBox fx:id="agg_status" layoutX="268.0" layoutY="9.0" mnemonicParsing="false" text="聚合数据"/>
-                <CheckBox fx:id="analysis_status" layoutX="268.0" layoutY="32.0" mnemonicParsing="false" text="分析数据"/>
                 <LineChart fx:id="line_chart" layoutX="11.0" layoutY="86.0" prefHeight="400.0" prefWidth="879.0">
                     <xAxis>
                         <NumberAxis side="BOTTOM"/>

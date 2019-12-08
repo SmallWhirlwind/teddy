@@ -74,6 +74,11 @@ public class DataHandler {
         dataService.exportAggData(aggDataList, node);
     }
 
+    public void exportAggregatingRoadData(VBox node) throws Exception {
+        getAnalysisData();
+        dataService.exportRoadAggData(analysisDataList, node);
+    }
+
     public void exportAnalysisData(VBox node) throws Exception {
         getAnalysisData();
         dataService.exportAnalysisAggData(analysisDataList, node);
