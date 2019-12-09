@@ -89,6 +89,7 @@ public class DataHandler {
     public void showAnalysisDataLineChart(LineChart line_chart) throws Exception {
         getAnalysisData();
         XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+        series.setName("运行速度");
         for (int i = 0; i < analysisDataList.size(); i++) {
             if (i == 0) {
                 series.getData().add(new XYChart.Data<Number, Number>(analysisDataList.get(i).getStart(), analysisDataList.get(i).getStartSpeed()));
