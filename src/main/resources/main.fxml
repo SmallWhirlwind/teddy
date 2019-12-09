@@ -63,20 +63,20 @@
         </MenuBar>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <CheckBox fx:id="p_status" layoutX="11.0" layoutY="9.0" mnemonicParsing="false" mouseTransparent="true"
+                <CheckBox fx:id="p_status" layoutX="32.0" layoutY="11.0" mnemonicParsing="false" mouseTransparent="true"
                           text="平面线形文件"/>
-                <CheckBox fx:id="z_status" layoutX="11.0" layoutY="48.0" mnemonicParsing="false" mouseTransparent="true"
+                <CheckBox fx:id="z_status" layoutX="32.0" layoutY="50.0" mnemonicParsing="false" mouseTransparent="true"
                           text="纵面线形文件"/>
-                <CheckBox fx:id="g_status" layoutX="132.0" layoutY="9.0" mnemonicParsing="false" mouseTransparent="true"
-                          text="构造物类型文件"/>
-                <CheckBox fx:id="h_status" layoutX="132.0" layoutY="48.0" mnemonicParsing="false"
+                <CheckBox fx:id="g_status" layoutX="169.0" layoutY="11.0" mnemonicParsing="false"
+                          mouseTransparent="true" text="构造物类型文件"/>
+                <CheckBox fx:id="h_status" layoutX="169.0" layoutY="50.0" mnemonicParsing="false"
                           mouseTransparent="true" text="互通立交文件"/>
-                <Label layoutX="263.0" layoutY="11.0" text="设计速度:"/>
-                <TextField fx:id="design_speed" layoutX="326.0" layoutY="5.0" mouseTransparent="true" prefHeight="20.0"
+                <Label layoutX="326.0" layoutY="13.0" text="设计速度:"/>
+                <TextField fx:id="design_speed" layoutX="389.0" layoutY="7.0" mouseTransparent="true" prefHeight="20.0"
                            prefWidth="39.0"/>
-                <Label layoutX="368.0" layoutY="11.0" text="km/h"/>
-                <Label layoutX="263.0" layoutY="48.0" text="车型:"/>
-                <TextField fx:id="car_type" layoutX="310.0" layoutY="43.0" mouseTransparent="true" prefHeight="27.0"
+                <Label layoutX="431.0" layoutY="13.0" text="km/h"/>
+                <Label layoutX="326.0" layoutY="50.0" text="车型:"/>
+                <TextField fx:id="car_type" layoutX="373.0" layoutY="45.0" mouseTransparent="true" prefHeight="27.0"
                            prefWidth="89.0"/>
                 <LineChart fx:id="line_chart" layoutX="11.0" layoutY="86.0" prefHeight="400.0" prefWidth="879.0">
                     <xAxis>
