@@ -8,6 +8,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -35,6 +36,10 @@ public class MainController {
     public MenuItem ds_80;
     @FXML
     public MenuItem ds_60;
+    @FXML
+    public TextField design_speed;
+    @FXML
+    public TextField car_type;
 
     private DataHandler dataHandler;
 
@@ -133,6 +138,7 @@ public class MainController {
         dataHandler.setMinAcceleration(0.2);
         dataHandler.setMinDriveSpeed(30D);
         dataHandler.setCarType(CarType.BIG);
+        car_type.setText("大型车");
     }
 
     @FXML
@@ -141,26 +147,31 @@ public class MainController {
         dataHandler.setMinAcceleration(0.15);
         dataHandler.setMinDriveSpeed(50D);
         dataHandler.setCarType(CarType.SMALL);
+        car_type.setText("小型车");
     }
 
     @FXML
     public void chooseDesignSpeed120(ActionEvent actionEvent) {
         dataHandler.setDesignSpeed(120D);
+        design_speed.setText("120");
     }
 
     @FXML
     public void chooseDesignSpeed100(ActionEvent actionEvent) {
         dataHandler.setDesignSpeed(100D);
+        design_speed.setText("100");
     }
 
     @FXML
     public void chooseDesignSpeed80(ActionEvent actionEvent) {
         dataHandler.setDesignSpeed(80D);
+        design_speed.setText("80");
     }
 
     @FXML
     public void chooseDesignSpeed60(ActionEvent actionEvent) {
         dataHandler.setDesignSpeed(60D);
+        design_speed.setText("60");
     }
 
     private void popAlert(String message) {
