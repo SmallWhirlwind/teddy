@@ -330,4 +330,77 @@ public class FileService implements DataService {
         out.close();
         workbook.close();
     }
+
+    @Override
+    public void exportAnalysisSecurityData(List<AggData> analysisDataList, VBox node) throws Exception {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet spreadsheet = workbook.createSheet();
+
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        // 时间类型格式，如果不设置这个，excel默认展示位number型
+        XSSFDataFormat format = workbook.createDataFormat();
+        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+
+        XSSFRow row = spreadsheet.createRow(0);
+        row.createCell(0).setCellValue("序号");
+        row.createCell(1).setCellValue("起点桩号");
+        row.createCell(2).setCellValue("终点桩号");
+        row.createCell(3).setCellValue("长度");
+        row.createCell(4).setCellValue("半径");
+        row.createCell(5).setCellValue("纵坡");
+        row.createCell(6).setCellValue("道路构造物");
+        row.createCell(7).setCellValue("路段类型");
+        row.createCell(8).setCellValue("互通立交");
+        row.createCell(9).setCellValue("入口速度");
+        row.createCell(10).setCellValue("中点速度");
+        row.createCell(11).setCellValue("出口速度");
+        row.createCell(12).setCellValue("安全评价");
+
+        int rowNum = 0;
+        for (AggData aggData : analysisDataList) {
+            XSSFRow xssfRow = spreadsheet.createRow(++rowNum);
+
+            xssfRow.createCell(0).setCellValue(rowNum);
+
+            XSSFCell cell_1 = xssfRow.createCell(1);
+            cell_1.setCellValue(aggData.getStart());
+            cell_1.setCellStyle(cellStyle);
+
+            XSSFCell cell_2 = xssfRow.createCell(2);
+            cell_2.setCellStyle(cellStyle);
+            cell_2.setCellValue(aggData.getEnd());
+
+            XSSFCell cell_3 = xssfRow.createCell(3);
+            cell_3.setCellStyle(cellStyle);
+            cell_3.setCellValue(aggData.getLength());
+
+            XSSFCell cell_4 = xssfRow.createCell(4);
+            cell_4.setCellStyle(cellStyle);
+            cell_4.setCellValue(aggData.getRadius());
+
+            XSSFCell cell_5 = xssfRow.createCell(5);
+            cell_5.setCellStyle(cellStyle);
+            cell_5.setCellValue(aggData.getSlope());
+
+            xssfRow.createCell(6).setCellValue(aggData.getRoadStructure().getValue());
+
+            xssfRow.createCell(7).setCellValue(aggData.getRoadType().getValue());
+
+            xssfRow.createCell(8).setCellValue(aggData.getHuTongLiJiaoValue());
+
+            xssfRow.createCell(9).setCellValue(aggData.getStartSpeed());
+
+            xssfRow.createCell(10).setCellValue(aggData.getMiddleSpeed());
+
+            xssfRow.createCell(11).setCellValue(aggData.getEndSpeed());
+
+            xssfRow.createCell(12).setCellValue(aggData.getRoadSecurity().getValue());
+        }
+
+        String chooseFolderPath = chooseFolder(node);
+        OutputStream out = new FileOutputStream(chooseFolderPath + "/安全评价.xlsx");
+        workbook.write(out);
+        out.close();
+        workbook.close();
+    }
 }

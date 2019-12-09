@@ -99,6 +99,11 @@ public class DataHandler {
         line_chart.getData().add(series);
     }
 
+    public void exportAnalysisSecurityData(VBox node) throws Exception {
+        getAnalysisData();
+        dataService.exportAnalysisSecurityData(analysisDataList, node);
+    }
+
     private void getAggData() throws Exception {
         aggDataList.clear();
         List<Double> totalStakes = getTotalStakesWithoutGouZhaoWu();
@@ -113,6 +118,7 @@ public class DataHandler {
         analysisData();
         calculateSpeed();
         calculateHuTongShiLiTiJiaoCha();
+        analysisSecurity();
     }
 
     private List<Double> getTotalStakesWithoutGouZhaoWu() {
@@ -362,6 +368,20 @@ public class DataHandler {
             }
 
         }
+    }
+
+    private void analysisSecurity() {
+        analysisDataList.forEach(aggData -> {
+            double v85 = aggData.getStartSpeed() - aggData.getEndSpeed();
+            double IV = v85 / aggData.getLength();
+            if (v85 < 10 && IV <= 10) {
+                aggData.setRoadSecurity(RoadSecurity.GOOD);
+            } else if (v85 < 20 && IV <= 10) {
+                aggData.setRoadSecurity(RoadSecurity.OK);
+            } else if (v85 >= 20 || IV > 10) {
+                aggData.setRoadSecurity(RoadSecurity.BAD);
+            }
+        });
     }
 
     private void setUpStartSpeedTemp() {

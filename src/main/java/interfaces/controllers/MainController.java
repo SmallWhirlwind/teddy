@@ -119,6 +119,15 @@ public class MainController {
     }
 
     @FXML
+    public void analysisSecurityData(ActionEvent event) {
+        try {
+            dataHandler.exportAnalysisSecurityData(node);
+        } catch (Throwable e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    @FXML
     public void chooseLargeCar(ActionEvent actionEvent) {
         dataHandler.setMaxAcceleration(0.25);
         dataHandler.setMinAcceleration(0.2);

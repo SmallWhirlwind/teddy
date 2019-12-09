@@ -21,4 +21,6 @@ public interface DataService {
     void exportAnalysisAggData(List<AggData> analysisDataList, VBox node) throws Exception;
 
     List<HuTongLiJiao> getHuTongLiJiaoData(VBox node) throws Exception;
+
+    void exportAnalysisSecurityData(List<AggData> analysisDataList, VBox node) throws Exception;
 }
