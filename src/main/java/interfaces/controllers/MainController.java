@@ -110,6 +110,15 @@ public class MainController {
     }
 
     @FXML
+    public void showAnalysisData(ActionEvent event) {
+        try {
+            dataHandler.showAnalysisDataLineChart(line_chart);
+        } catch (Throwable e) {
+            popAlert(e.getMessage());
+        }
+    }
+
+    @FXML
     public void chooseLargeCar(ActionEvent actionEvent) {
         dataHandler.setMaxAcceleration(0.25);
         dataHandler.setMinAcceleration(0.2);

@@ -2,6 +2,8 @@ package domain;
 
 import domain.model.*;
 import interfaces.workbook.FileService;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import lombok.Data;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -14,8 +16,8 @@ import java.util.stream.Stream;
 
 @Data
 public class DataHandler {
-
     public static final Double XiangQian = 200D;
+
     public static final Double XiangHou = 100D;
     private DataService dataService;
 
@@ -82,6 +84,19 @@ public class DataHandler {
     public void exportAnalysisData(VBox node) throws Exception {
         getAnalysisData();
         dataService.exportAnalysisAggData(analysisDataList, node);
+    }
+
+    public void showAnalysisDataLineChart(LineChart line_chart) throws Exception {
+        getAnalysisData();
+        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+        for (int i = 0; i < analysisDataList.size(); i++) {
+            if (i == 0) {
+                series.getData().add(new XYChart.Data<Number, Number>(analysisDataList.get(i).getStart(), analysisDataList.get(i).getStartSpeed()));
+            }
+            series.getData().add(new XYChart.Data<Number, Number>((analysisDataList.get(i).getEnd() + analysisDataList.get(i).getStart()) / 2, analysisDataList.get(i).getMiddleSpeed()));
+            series.getData().add(new XYChart.Data<Number, Number>(analysisDataList.get(i).getEnd(), analysisDataList.get(i).getEndSpeed()));
+        }
+        line_chart.getData().add(series);
     }
 
     private void getAggData() throws Exception {

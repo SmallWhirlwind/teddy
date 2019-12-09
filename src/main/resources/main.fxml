@@ -53,7 +53,7 @@
                 <Menu mnemonicParsing="false" text="分析计算">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#analysisData" text="速度预测"/>
-                        <MenuItem mnemonicParsing="false" text="运行速度图"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showAnalysisData" text="运行速度图"/>
                         <MenuItem mnemonicParsing="false" text="安全评价"/>
                     </items>
                 </Menu>
