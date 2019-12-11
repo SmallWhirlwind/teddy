@@ -11,6 +11,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         primaryStage.setTitle("道路安全性评价系统");
         primaryStage.setScene(new Scene(root, 900, 600));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
