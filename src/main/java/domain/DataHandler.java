@@ -55,20 +55,96 @@ public class DataHandler {
 
     public void setUpPingMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         pingMianXianXings = dataService.getPingMianXianXingData(node);
+
+        if(!this.isZhengXiangPingMianXianXing()) {
+            this.fanXiangChuLi_PingMian();
+        }
+    }
+
+    private void fanXiangChuLi_PingMian() {
+        List<PingMianXianXing> temp = new ArrayList<>();
+        for (int i = this.pingMianXianXings.size() - 1; i >= 0; i--) {
+            temp.add(this.pingMianXianXings.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.pingMianXianXings = temp;
     }
 
     public void setUpZongMianXianXingData(VBox node) throws IOException, InvalidFormatException {
         zongMianXianXings = dataService.getZongMianXianXingData(node);
+
+        if(!this.isZhengXiangZongMianXianXing()) {
+            this.fanXiangChuLi_ZongMian();
+        }
+    }
+
+    private void fanXiangChuLi_ZongMian() {
+        List<ZongMianXianXing> temp = new ArrayList<>();
+        for (int i = this.zongMianXianXings.size() - 1; i >= 0; i--) {
+            temp.add(this.zongMianXianXings.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.zongMianXianXings = temp;
     }
 
     public void setUpGouZhaoWuData(VBox node) throws Exception {
         gouZhaoWus = dataService.getGouZhaoWuData(node);
         suiDaoGouZhaoWus = gouZhaoWus.stream().map(GouZhaoWu::clone).collect(Collectors.toList());
         extensionTunnelStakes();
+
+        if(!this.isZhengXiangGouZhaoWu()) {
+            this.fanXiangChuLi_GouZhao();
+        }
+    }
+
+    private void fanXiangChuLi_GouZhao() {
+        List<GouZhaoWu> temp = new ArrayList<>();
+        for (int i = this.gouZhaoWus.size() - 1; i >= 0; i--) {
+            temp.add(this.gouZhaoWus.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.gouZhaoWus = temp;
     }
 
     public void setUpHuTongLiJiaoData(VBox node) throws Exception {
         huTongLiJiaos = dataService.getHuTongLiJiaoData(node);
+
+        if(!this.isZhengXiangHuTongLiJiao()) {
+            this.fanXiangChuLi_HuTonng();
+        }
+    }
+
+    private void fanXiangChuLi_HuTonng() {
+        List<HuTongLiJiao> temp = new ArrayList<>();
+        for (int i = this.huTongLiJiaos.size() - 1; i >= 0; i--) {
+            temp.add(this.huTongLiJiaos.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.huTongLiJiaos = temp;
     }
 
     public void exportAggregatingData(VBox node) throws Exception {
