@@ -9,7 +9,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("道路安全性评价系统");
+        primaryStage.setTitle("公路运行速度协调性评价软件");
         primaryStage.setScene(new Scene(root, 900, 600));
         primaryStage.setResizable(false);
         primaryStage.show();

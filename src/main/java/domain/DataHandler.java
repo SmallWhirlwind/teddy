@@ -105,6 +105,22 @@ public class DataHandler {
         dataService.exportAnalysisSecurityData(analysisDataList, node);
     }
 
+    public boolean isZhengXiangPingMianXianXing() {
+        return pingMianXianXings.get(0).getStart() < pingMianXianXings.get(1).getStart();
+    }
+
+    public boolean isZhengXiangZongMianXianXing() {
+        return zongMianXianXings.get(0).getStart() < zongMianXianXings.get(1).getStart();
+    }
+
+    public boolean isZhengXiangGouZhaoWu() {
+        return gouZhaoWus.get(0).getStart() < gouZhaoWus.get(1).getStart();
+    }
+
+    public boolean isZhengXiangHuTongLiJiao() {
+        return huTongLiJiaos.get(0).getStart() < huTongLiJiaos.get(1).getStart();
+    }
+
     private void getAggData() throws Exception {
         aggDataList.clear();
         List<Double> totalStakes = getTotalStakesWithoutGouZhaoWu();

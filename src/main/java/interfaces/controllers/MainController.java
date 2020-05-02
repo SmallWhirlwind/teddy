@@ -21,11 +21,19 @@ public class MainController {
     @FXML
     private CheckBox p_status;
     @FXML
+    public TextField p_direction;
+    @FXML
     private CheckBox z_status;
+    @FXML
+    public TextField z_direction;
     @FXML
     private CheckBox g_status;
     @FXML
+    public TextField g_direction;
+    @FXML
     private CheckBox h_status;
+    @FXML
+    public TextField h_direction;
     @FXML
     private LineChart line_chart;
     @FXML
@@ -51,6 +59,7 @@ public class MainController {
     protected void setUpPingMianXianXingData(ActionEvent event) {
         try {
             dataHandler.setUpPingMianXianXingData(node);
+            p_direction.setText(dataHandler.isZhengXiangPingMianXianXing() ? "正向" : "反向");
             p_status.setSelected(true);
         } catch (IOException | InvalidFormatException e) {
             popAlert(e.getMessage());
@@ -61,6 +70,7 @@ public class MainController {
     protected void setUpZongMianXianXingData(ActionEvent event) {
         try {
             dataHandler.setUpZongMianXianXingData(node);
+            z_direction.setText(dataHandler.isZhengXiangZongMianXianXing() ? "正向" : "反向");
             z_status.setSelected(true);
         } catch (IOException | InvalidFormatException e) {
             popAlert(e.getMessage());
@@ -71,6 +81,7 @@ public class MainController {
     protected void setUpGouZhaoWeData(ActionEvent event) {
         try {
             dataHandler.setUpGouZhaoWuData(node);
+            g_direction.setText(dataHandler.isZhengXiangGouZhaoWu() ? "正向" : "反向");
             g_status.setSelected(true);
         } catch (Throwable e) {
             popAlert(e.getMessage());
@@ -81,6 +92,7 @@ public class MainController {
     protected void setUpHuTongLiJiaoData(ActionEvent event) {
         try {
             dataHandler.setUpHuTongLiJiaoData(node);
+            h_direction.setText(dataHandler.isZhengXiangHuTongLiJiao() ? "正向" : "反向");
             h_status.setSelected(true);
         } catch (Throwable e) {
             popAlert(e.getMessage());

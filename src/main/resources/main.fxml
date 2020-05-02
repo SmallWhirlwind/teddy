@@ -11,79 +11,76 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="node" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaces.controllers.MainController">
+<VBox fx:id="node" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaces.controllers.MainController">
     <children>
         <MenuBar prefWidth="896.0" VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="线形文件">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#setUpPingMianXianXingData" text="平面线形文件"/>
-                        <MenuItem mnemonicParsing="false" onAction="#setUpZongMianXianXingData" text="纵面线形文件"/>
-                        <MenuItem mnemonicParsing="false" onAction="#setUpGouZhaoWeData" text="构造物类型文件"/>
-                        <MenuItem mnemonicParsing="false" onAction="#setUpHuTongLiJiaoData" text="互通立交文件"/>
+                        <MenuItem mnemonicParsing="false" onAction="#setUpPingMianXianXingData" text="平面线形文件" />
+                        <MenuItem mnemonicParsing="false" onAction="#setUpZongMianXianXingData" text="纵面线形文件" />
+                        <MenuItem mnemonicParsing="false" onAction="#setUpGouZhaoWeData" text="构造物类型文件" />
+                        <MenuItem mnemonicParsing="false" onAction="#setUpHuTongLiJiaoData" text="互通立交文件" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="公路等级">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="高速公路"/>
-                        <MenuItem mnemonicParsing="false" text="一级公路"/>
-                        <MenuItem mnemonicParsing="false" text="二级公路"/>
-                        <MenuItem mnemonicParsing="false" text="三级公路"/>
+                        <MenuItem mnemonicParsing="false" text="高速公路" />
+                        <MenuItem mnemonicParsing="false" text="一级公路" />
+                        <MenuItem mnemonicParsing="false" text="二级公路" />
+                        <MenuItem mnemonicParsing="false" text="三级公路" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="车型">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#chooseLargeCar" text="大型车"/>
-                        <MenuItem mnemonicParsing="false" onAction="#chooseSmallCar" text="小型车"/>
+                        <MenuItem mnemonicParsing="false" onAction="#chooseLargeCar" text="大型车" />
+                        <MenuItem mnemonicParsing="false" onAction="#chooseSmallCar" text="小型车" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="设计速度">
                     <items>
-                        <MenuItem fx:id="ds_120" mnemonicParsing="false" onAction="#chooseDesignSpeed120" text="120"/>
-                        <MenuItem fx:id="ds_100" mnemonicParsing="false" onAction="#chooseDesignSpeed100" text="100"/>
-                        <MenuItem fx:id="ds_80" mnemonicParsing="false" onAction="#chooseDesignSpeed80" text="80"/>
-                        <MenuItem fx:id="ds_60" mnemonicParsing="false" onAction="#chooseDesignSpeed60" text="60"/>
+                        <MenuItem fx:id="ds_120" mnemonicParsing="false" onAction="#chooseDesignSpeed120" text="120" />
+                        <MenuItem fx:id="ds_100" mnemonicParsing="false" onAction="#chooseDesignSpeed100" text="100" />
+                        <MenuItem fx:id="ds_80" mnemonicParsing="false" onAction="#chooseDesignSpeed80" text="80" />
+                        <MenuItem fx:id="ds_60" mnemonicParsing="false" onAction="#chooseDesignSpeed60" text="60" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="分析路段">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="道路结构分析"/>
-                        <MenuItem mnemonicParsing="false" onAction="#aggregatingRoadData" text="路段划分"/>
+                        <MenuItem mnemonicParsing="false" onAction="#aggregatingData" text="道路结构分析" />
+                        <MenuItem mnemonicParsing="false" onAction="#aggregatingRoadData" text="路段划分" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="分析计算">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="速度预测"/>
-                        <MenuItem mnemonicParsing="false" onAction="#showAnalysisData" text="运行速度图"/>
-                        <MenuItem mnemonicParsing="false" onAction="#analysisSecurityData" text="安全评价"/>
+                        <MenuItem mnemonicParsing="false" onAction="#analysisData" text="速度预测" />
+                        <MenuItem mnemonicParsing="false" onAction="#showAnalysisData" text="运行速度图" />
+                        <MenuItem mnemonicParsing="false" onAction="#analysisSecurityData" text="安全评价" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <CheckBox fx:id="p_status" layoutX="32.0" layoutY="11.0" mnemonicParsing="false" mouseTransparent="true"
-                          text="平面线形文件"/>
-                <CheckBox fx:id="z_status" layoutX="32.0" layoutY="50.0" mnemonicParsing="false" mouseTransparent="true"
-                          text="纵面线形文件"/>
-                <CheckBox fx:id="g_status" layoutX="169.0" layoutY="11.0" mnemonicParsing="false"
-                          mouseTransparent="true" text="构造物类型文件"/>
-                <CheckBox fx:id="h_status" layoutX="169.0" layoutY="50.0" mnemonicParsing="false"
-                          mouseTransparent="true" text="互通立交文件"/>
-                <Label layoutX="326.0" layoutY="13.0" text="设计速度:"/>
-                <TextField fx:id="design_speed" layoutX="389.0" layoutY="7.0" mouseTransparent="true" prefHeight="20.0"
-                           prefWidth="39.0"/>
-                <Label layoutX="431.0" layoutY="13.0" text="km/h"/>
-                <Label layoutX="326.0" layoutY="50.0" text="车型:"/>
-                <TextField fx:id="car_type" layoutX="373.0" layoutY="45.0" mouseTransparent="true" prefHeight="27.0"
-                           prefWidth="89.0"/>
+                <CheckBox fx:id="p_status" layoutX="32.0" layoutY="11.0" mnemonicParsing="false" mouseTransparent="true" text="平面线形文件" />
+                <CheckBox fx:id="z_status" layoutX="32.0" layoutY="50.0" mnemonicParsing="false" mouseTransparent="true" text="纵面线形文件" />
+                <TextField fx:id="p_direction" layoutX="135.0" layoutY="8.0" mouseTransparent="true" prefHeight="27.0" prefWidth="45.0" />
+                <TextField fx:id="z_direction" layoutX="135.0" layoutY="47.0" mouseTransparent="true" prefHeight="27.0" prefWidth="45.0" />
+                <CheckBox fx:id="g_status" layoutX="219.0" layoutY="11.0" mnemonicParsing="false" mouseTransparent="true" text="构造物类型文件" />
+                <CheckBox fx:id="h_status" layoutX="219.0" layoutY="50.0" mnemonicParsing="false" mouseTransparent="true" text="互通立交文件" />
+                <TextField fx:id="g_direction" layoutX="335.0" layoutY="8.0" mouseTransparent="true" prefHeight="27.0" prefWidth="45.0" />
+                <TextField fx:id="h_direction" layoutX="335.0" layoutY="47.0" mouseTransparent="true" prefHeight="27.0" prefWidth="45.0" />
+                <Label layoutX="426.0" layoutY="13.0" text="设计速度:" />
+                <TextField fx:id="design_speed" layoutX="489.0" layoutY="7.0" mouseTransparent="true" prefHeight="20.0" prefWidth="39.0" />
+                <Label layoutX="531.0" layoutY="13.0" text="km/h" />
+                <Label layoutX="426.0" layoutY="50.0" text="车型:" />
+                <TextField fx:id="car_type" layoutX="473.0" layoutY="45.0" mouseTransparent="true" prefHeight="27.0" prefWidth="89.0" />
                 <LineChart fx:id="line_chart" layoutX="11.0" layoutY="86.0" prefHeight="400.0" prefWidth="879.0">
                     <xAxis>
-                        <NumberAxis side="BOTTOM"/>
+                        <NumberAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis side="LEFT"/>
+                        <NumberAxis side="LEFT" />
                     </yAxis>
                 </LineChart>
             </children>
