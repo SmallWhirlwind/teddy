@@ -18,11 +18,17 @@ public class GouZhaoWu {
         return this.roadStructure == GouZhaoWuType.SUI;
     }
 
-    public Double getSuiDaoStart() {
+    public Double getSuiDaoStart(boolean isZhengXiang) {
+        if(!isZhengXiang) {
+            return this.start + 200;
+        }
         return this.start - 200;
     }
 
-    public Double getSuiDaoEnd() {
+    public Double getSuiDaoEnd(boolean isZhengXiang) {
+        if(!isZhengXiang) {
+            return this.end - 100;
+        }
         return this.end + 100;
     }
 

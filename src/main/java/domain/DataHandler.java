@@ -149,16 +149,55 @@ public class DataHandler {
 
     public void exportAggregatingData(VBox node) throws Exception {
         getAggData();
+        if(!this.isZhengXiang()) {
+            fanXiangChuLi_AggDataList();
+        }
         dataService.exportAggData(aggDataList, node);
+    }
+
+    private void fanXiangChuLi_AggDataList() {
+        List<AggData> temp = new ArrayList<>();
+        for (int i = this.aggDataList.size() - 1; i >= 0; i--) {
+            temp.add(this.aggDataList.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.aggDataList = temp;
     }
 
     public void exportAggregatingRoadData(VBox node) throws Exception {
         getAnalysisData();
+        if(!this.isZhengXiang()) {
+            fanXiangChuLi_AnalysisDataList();
+        }
         dataService.exportRoadAggData(analysisDataList, node);
+    }
+
+    private void fanXiangChuLi_AnalysisDataList() {
+        List<AggData> temp = new ArrayList<>();
+        for (int i = this.analysisDataList.size() - 1; i >= 0; i--) {
+            temp.add(this.analysisDataList.get(i));
+        }
+
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            Double start = temp.get(i).getStart();
+            Double end = temp.get(i).getEnd();
+            temp.get(i).setStart(end);
+            temp.get(i).setEnd(start);
+        }
+        this.analysisDataList = temp;
     }
 
     public void exportAnalysisData(VBox node) throws Exception {
         getAnalysisData();
+        if(!this.isZhengXiang()) {
+            fanXiangChuLi_AnalysisDataList();
+        }
         dataService.exportAnalysisAggData(analysisDataList, node);
     }
 
@@ -178,7 +217,17 @@ public class DataHandler {
 
     public void exportAnalysisSecurityData(VBox node) throws Exception {
         getAnalysisData();
+        if(!this.isZhengXiang()) {
+            fanXiangChuLi_AnalysisDataList();
+        }
         dataService.exportAnalysisSecurityData(analysisDataList, node);
+    }
+
+    private boolean isZhengXiang() {
+        return pingMianXianXings.get(0).getStart() < pingMianXianXings.get(1).getStart()
+                && zongMianXianXings.get(0).getStart() < zongMianXianXings.get(1).getStart()
+                && gouZhaoWus.get(0).getStart() < gouZhaoWus.get(1).getStart()
+                && huTongLiJiaos.get(0).getStart() < huTongLiJiaos.get(1).getStart();
     }
 
     public boolean isZhengXiangPingMianXianXing() {
@@ -318,8 +367,8 @@ public class DataHandler {
             hou = 100D;
             GouZhaoWu suiDaoGouZhaoWu = suiDaoGouZhaoWus.get(i);
             if (suiDaoGouZhaoWu.getRoadStructure() == GouZhaoWuType.SUI) {
-                suiDaoGouZhaoWu.setStart(compareAndGetBig(suiDaoGouZhaoWu.getSuiDaoStart(), startStake));
-                suiDaoGouZhaoWu.setEnd(compareAndGetSmall(suiDaoGouZhaoWu.getSuiDaoEnd(), endStake));
+                suiDaoGouZhaoWu.setStart(compareAndGetBig(suiDaoGouZhaoWu.getSuiDaoStart(this.isZhengXiang()), startStake));
+                suiDaoGouZhaoWu.setEnd(compareAndGetSmall(suiDaoGouZhaoWu.getSuiDaoEnd(this.isZhengXiang()), endStake));
 
                 for (int j = i - 1; j >= 0; j--) {
                     if (suiDaoGouZhaoWus.get(j).getStart() < suiDaoGouZhaoWu.getStart()) {
