@@ -5,8 +5,10 @@ import domain.model.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -394,7 +396,20 @@ public class FileService implements DataService {
 
             xssfRow.createCell(11).setCellValue(aggData.getEndSpeed());
 
-            xssfRow.createCell(12).setCellValue(aggData.getRoadSecurity().getValue());
+            XSSFCellStyle cellStyle12 = workbook.createCellStyle();
+            Font cellStyle12Font = workbook.createFont();
+            if (aggData.getRoadSecurity().equals(RoadSecurity.GOOD)) {
+                cellStyle12Font.setColor(HSSFColor.GREEN.index);
+            } else if (aggData.getRoadSecurity().equals(RoadSecurity.OK)) {
+                cellStyle12Font.setColor(HSSFColor.YELLOW.index);
+            } else {
+                cellStyle12Font.setColor(HSSFColor.RED.index);
+            }
+            cellStyle12.setFont(cellStyle12Font);
+
+            XSSFCell cell_12 = xssfRow.createCell(12);
+            cell_12.setCellStyle(cellStyle12);
+            cell_12.setCellValue(aggData.getRoadSecurity().getValue());
         }
 
         String chooseFolderPath = chooseFolder(node);
